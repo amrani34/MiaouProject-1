@@ -1,0 +1,17 @@
+{
+  "name": "ANONYOUB",
+  "version": "0.1.0",
+  "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Miaou"
+  ],
+  "author": "Gary PEGEOT <garypegeot@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "~4.10.6"
+  }
+}
