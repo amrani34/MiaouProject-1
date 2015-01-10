@@ -1,5 +1,5 @@
 {
-  "name": "ANONYOUB",
+  "name": "MiaouProject",
   "version": "0.1.0",
   "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit",
   "main": "app.js",
@@ -12,6 +12,7 @@
   "author": "Gary PEGEOT <garypegeot@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "express": "~4.10.6"
+    "express": "~4.10.6",
+    "cheerio": "~0.18.0"
   }
 }
