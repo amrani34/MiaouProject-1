@@ -4,12 +4,13 @@ $(document).ready(function () {
         $result = $('#result'),
         validUrl = /^(https?:\/\/)([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
     
-    $('#getGoogleLinks').click(function (e) {
-        var keywords = $('#keyword').val().split(',');
+    $('.search-engine').click(function (e) {
+        var keywords = $('#keyword').val().split(','),
+            engine = $(this).data('engine');
         if (keywords) {
-            $.getJSON('/links', {keywords: keywords}, function (res) {
+            $.getJSON('/links/'+engine, {keywords: keywords}, function (res) {
                 if (!res.error)
-                    $urls.val(res.urls.join(','));
+                    $urls.val( $urls.val() + res.urls.join(','));
                 else
                     alert(res.message);
             });
@@ -17,6 +18,11 @@ $(document).ready(function () {
         else
             alert('Choisi un mot-clé, connard.');
     });
+    
+    $('#emptyLinks').click(function() {
+        $urls.val('');
+    });
+    
     $('#miaouform').submit(function(e) {
         e.preventDefault();
         $result.empty();
@@ -28,7 +34,7 @@ $(document).ready(function () {
             if (validUrl.test(url))
                 targetUrls.push(url);
         });
-        
+        $.unique(targetUrls);
         if (!targetUrls.length)
             return alert('Aucune url valide');
         
