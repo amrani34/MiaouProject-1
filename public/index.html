@@ -19,23 +19,65 @@
     </head>
     <body>
         <div class="container">
-            <h1>Anonyoub Project</h1>
-            <form id="anonyform" class="form-horizontal">
+            <h1>Miaou Project</h1>
+            <form id="miaouform" class="form-horizontal">
                 <fieldset>
-                    <legend>Rechercher</legend>
+                    <legend>Créer un paragraphe</legend>
                     <div class="form-group">
                         <label for="keywords" class="col-sm-2 control-label">Mots-clés:</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="keyword" placeholder="Miaou, Le chat">
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="keyword" name="keyword" placeholder="Miaou, Le chat" required>
                             <span id="helpBlock" class="help-block">Mots-clés séparés par des virgules.</span>
                         </div>
                     </div>
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox"> Mode Strict
-                                <span id="helpBlock" class="help-block">Si activé, la phrase devra contenir tout les mots-clés.</span>
+                    <div class="form-group">
+                        <label for="keywords" class="col-sm-2 control-label">Sites:</label>
+                        <div class="col-sm-8">
+                            <textarea id="urls" class="form-control" rows="3" required></textarea>
+                            <span id="helpBlock" class="help-block">Urls complètes, séparées par des virgules.</span>
+                        </div>
+                        <div class="col-sm-2 text-right">
+                            <button type="button" class="btn btn-default btn-sm" id="getGoogleLinks"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Rechercher sur Google</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-5">
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="strict" id="strictMode0" value="0" checked>
+                                    La phrase doit contenir <b>l'un</b> des mot-clés
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="strict" id="strictMode1" value="1">
+                                    La phrase doit contenir <b>tous</b> les mot-clés
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <label for="max_results" class="col-sm-9 control-label">Nombre maximum de résultats par page:</label>
+                                <div class="col-sm-3">
+                                    <input type="number" class="form-control" id="max_results" name="max_results" placeholder="Nombre de résultats par page" value="2" min="1">
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="keywords" class="col-sm-2 control-label">Chercher dans:</label>
+                        <div class="col-sm-10">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="selectorP" name="selectors[]" value="0" checked> Les paragraphes <small class="text-muted">(p, blockquotes)</small>
                             </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="selectorH" name="selectors[]" value="1" checked> Les titres <small class="text-muted">(h1-6)</small>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Valider</button>
                         </div>
                     </div>
                 </fieldset>

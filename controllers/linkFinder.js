@@ -1,8 +1,8 @@
 var https = require('https');
 var cheerio = require('cheerio');
-module.exports = function (request, response, next) {
-    var url = 'https://www.google.fr/search?client=ubuntu&channel=fs&ie=utf-8&oe=utf-8&gfe_rd=cr&q=' + encodeURI(request.query.keyword);
-    console.log(url);
+module.exports = function (request, response) {
+    var keywords = request.query.keywords.join(' '),
+        url = 'https://www.google.fr/search?client=ubuntu&channel=fs&ie=utf-8&oe=utf-8&gfe_rd=cr&q=' + encodeURI(keywords);
     https.get(url, function (res) {
         res.setEncoding('utf8');
         var html = '';
@@ -16,9 +16,8 @@ module.exports = function (request, response, next) {
                 url = $(this).attr('href');
                 urlArray.push(url.slice(7, url.indexOf('&sa')));
             });                
-            console.log('Connection to Google: OK. Got ' + urlArray.length + ' result(s)');
-            request.urls = urlArray;
-            next();
+            console.log('Connection to Google: OK. Keyword(s) ' + keywords + ' get ' + urlArray.length + ' result(s)');
+            response.status(200).json({success: true, urls: urlArray });
         }).on('error', function() {
             response.status(500).json({error: true, message: 'Unable to connect to Google' });
         });
