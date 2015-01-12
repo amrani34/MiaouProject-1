@@ -4,7 +4,7 @@ var cheerio = require('cheerio');
 module.exports = function (request, response) {
     'use strict';
     var keywords = request.query.keywords.join(' '),
-        search = request.query.search_type === 'large' ? encodeURI(keywords) : encodeURI('"' + keywords + '"'),
+        search = request.query.searchType === 'large' ? encodeURI(keywords) : encodeURI('"' + keywords + '"'),
         engine = request.params.engine.toLowerCase(),
         selector,
         protocol,

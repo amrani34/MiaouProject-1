@@ -6,9 +6,10 @@ $(document).ready(function () {
     
     $('.search-engine').click(function (e) {
         var keywords = $('#keyword').val().split(','),
+            searchType = $('[name="search_type"]:checked').val(),
             engine = $(this).data('engine');
         if (keywords) {
-            $.getJSON('/links/'+engine, {keywords: keywords}, function (res) {
+            $.getJSON('/links/'+engine, {keywords: keywords, searchType: searchType}, function (res) {
                 if (!res.error)
                     $urls.val( $urls.val() + res.urls.join(','));
                 else
