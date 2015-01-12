@@ -2,7 +2,9 @@ var http = require('http');
 var https = require('https');
 var cheerio = require('cheerio');
 module.exports = function (request, response) {
+    'use strict';
     var keywords = request.query.keywords.join(' '),
+        search = request.query.search_type === 'large' ? encodeURI(keywords) : encodeURI('"' + keywords + '"'),
         engine = request.params.engine.toLowerCase(),
         selector,
         protocol,
@@ -47,7 +49,7 @@ module.exports = function (request, response) {
                 urlArray.push(url);
             });
             
-            console.log('Connection to '+ engine +': OK. Keyword(s) ' + keywords + ' get ' + urlArray.length + ' result(s)');
+            console.log('Connection to '+ engine +': OK. Keyword(s) ' + search + ' get ' + urlArray.length + ' result(s)');
             response.status(200).json({success: true, urls: urlArray });
         }).on('error', function() {
             response.status(500).json({error: true, message: 'Unable to connect to Google' });

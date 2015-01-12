@@ -27,6 +27,10 @@ $(document).ready(function () {
         e.preventDefault();
         $result.empty();
         var targetUrls = [],
+            $p,
+            $nbRes = $('#nb-results'),
+            nbRep = 0,
+            results = 0,
             data = $(this).serializeArray();
         
         $urls.val().split(',').forEach(function(url) {
@@ -34,18 +38,32 @@ $(document).ready(function () {
             if (validUrl.test(url))
                 targetUrls.push(url);
         });
+        
         $.unique(targetUrls);
         if (!targetUrls.length)
             return alert('Aucune url valide');
         
+        $nbRes.text(results);
+        $('#info-area, #waiter').fadeIn();
+        
         targetUrls.forEach(function(url) {            
             $.getJSON('/keyword?url= '+ url, data, function (res) {
+                nbRep++;
+                if (nbRep === targetUrls.length)
+                    $('#waiter').fadeOut();
+                
                 if (res.error)
                     return;
-                res.p.forEach(function(text) {
-                    $result.append($('<span />', {text: text, title: url}).data('origin', url).tooltip());
-                });
-            });
+                
+                if (res.p.length) {                    
+                    $nbRes.text(results += res.p.length);
+                    $p = $('<p />', {title: url}).data('origin', url).tooltip().fadeIn();
+                    res.p.forEach(function(text) {
+                        $p.append($('<span/>').text(text));
+                    });
+                    $result.append($p);
+                }
+            });        
         });
     });
 });
