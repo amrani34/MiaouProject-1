@@ -15,62 +15,66 @@ module.exports = function (request, response) {
         keywords = request.query.keyword.split(',').map(function (keyword) {
             return new RegExp(keyword, 'i');
         }),
+        validUrl = /^(https?:\/\/)([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/,
         nbComplete = 0,
         strictMode = request.query.strict || false,
-        filters = ['p','h1', 'h2', 'h3'],
+        toAvoid = ['<!--','function', ' > ', ' var ', ']]>'],
         minLength = 40,
         maxLentgh = 800,
         resultLimit = request.query.max_results || 2,
         html = '',
         $,
+        data,
+        valid,
         protocol;
     
-    if (url) {
-        console.log('Mode strict: ' + strictMode);
+    if (validUrl.test(url)) {
         protocol = (url.slice(0, 5) === 'https') ? https : http;        
         protocol.get(url, function (res) {
             res.setEncoding('utf8');
             
             res.on('data', function(chunk) {
                 html += chunk;
-            }).on('end', function() {                    
-                $ = cheerio.load(html),
+            }).on('end', function() {
+                $ = cheerio.load(html);
+                data = $('body').text().split(/[!().:;?]/);
+                
+                data.forEach(function (text) {
+                    // Check if string match valid condition
+                    if (text.length < minLength || text.length > maxLentgh || results.p.length >= resultLimit)
+                        return;
                     
-                filters.forEach(function (selector) {
-                    $(selector).each(function () {
-                        var text = $(this).text(),
-                            valid;
-                        
-                        if (text.length < minLength || text.length > maxLentgh || results.p.length >= resultLimit)
+                    // Check if string contain an invalid word
+                    for (var i = 0, l = toAvoid.length; i < l; i++)
+                        if (text.indexOf(toAvoid[i]) != -1)
                             return;
-                        
-                        if (strictMode) {  
-                            valid = true;
-                            keywords.forEach(function(keyword) {
-                                if (!keyword.test(text))
-                                    valid = false;                                    
-                            });                           
-                        } else {
-                            valid = false;
-                            keywords.forEach(function(keyword) {
-                                if (keyword.test(text))
-                                    valid = true;
-                            });
-                        }
-                        
-                        if (valid)
-                            results.p.push(text);
-                    });
+                    
+                    if (strictMode) {
+                        valid = true;
+                        keywords.forEach(function(keyword) {
+                            if (!keyword.test(text))
+                                valid = false;
+                        });
+                    } else {
+                        valid = false;
+                        keywords.forEach(function(keyword) {
+                            if (keyword.test(text))
+                                valid = true;
+                        });
+                    }                    
+                    
+                    if (valid)
+                        results.p.push(text);
                 });
-
-                console.log('Connection to '+ url +': OK');               
+                
+                console.log('Connection to '+ url +': OK');
                 results.success = true;
                 results.message = 'Found ' + results.p.length + ' result(s)';
-                response.status(200).json(results);                        
+                response.status(200).json(results);
             }).on('error', function(e) {
                 console.log('Connection to '+ url +': '+ e.message);
                 response.status(500).json({error: true, message: e.message });
             });
-        });       
+        });
     }
 };
