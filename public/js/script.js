@@ -23,12 +23,24 @@ $(document).ready(function () {
     $('#emptyLinks').click(function() {
         $urls.val('');
     });
-    
+    $('#result').on('click', '.btn-rm', function(){
+        $(this).parent().parent().fadeOut(600, function(){
+            $(this).remove();
+        });
+    });    
+    $('#result').on('click', '.btn-add', function(){
+        var text = $(this).parent().parent().find('a').text();
+        $(this).parent().parent().fadeOut(600, function(){
+            $(this).remove();
+        });
+        $('#panier').append(text + '. ');
+    });    
     $('#miaouform').submit(function(e) {
         e.preventDefault();
         $result.empty();
         var targetUrls = [],
             $p,
+            $btnGroup,
             $nbRes = $('#nb-results'),
             nbRep = 0,
             results = 0,
@@ -36,7 +48,7 @@ $(document).ready(function () {
         
         $urls.val().split(',').forEach(function(url) {
             var url = url.trim();
-            if (validUrl.test(url))
+            //if (validUrl.test(url))
                 targetUrls.push(url);
         });
         
@@ -58,11 +70,14 @@ $(document).ready(function () {
                 
                 if (res.p.length) {                    
                     $nbRes.text(results += res.p.length);
-                    $p = $('<p />', {title: url}).data('origin', url).tooltip().fadeIn();
                     res.p.forEach(function(text) {
-                        $p.append($('<span/>').text(text));
+                        $p = $('<p />', {title: url}).tooltip().fadeIn();
+                        $btnGroup = $('<div />', {'class': 'btn-group'})
+                        .append($('<button />', {html: '<i class="fa fa-shopping-cart"></i>'}).addClass('btn btn-default btn-xs btn-add'))
+                        .append($('<button />', {html: '<i class="fa fa-trash"></i>'}).addClass('btn btn-default btn-xs btn-rm'));
+                        $p.append($('<a/>', {text: text, href: url, target: '_blank'})).append($btnGroup);
+                        $result.append($p);
                     });
-                    $result.append($p);
                 }
             });        
         });

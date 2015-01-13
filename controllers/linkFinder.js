@@ -13,13 +13,13 @@ module.exports = function (request, response) {
     switch (engine) {
         case 'google':
             protocol = https;
-            url = 'https://www.google.fr/search?client=ubuntu&channel=fs&ie=utf-8&oe=utf-8&gfe_rd=cr&q=' + encodeURI(keywords);
+            url = 'https://www.google.fr/search?client=ubuntu&num=40&channel=fs&ie=utf-8&oe=utf-8&gfe_rd=cr&q=' + search;
             selector = 'h3.r > a';
             break;
         
         case 'bing':
             protocol = http;
-            url = 'http://www.bing.com/search?q=' + encodeURI(keywords);
+            url = 'http://www.bing.com/search?q=' + search;
             selector = 'li.b_algo > h2 > a';
             break;
             
@@ -30,7 +30,7 @@ module.exports = function (request, response) {
     
     if (!url)
         response.status(500).json({error: true, message: 'Invalid Search Engine' });
-        
+    console.log(url);   
     protocol.get(url, function (res) {
         res.setEncoding('utf8');
         var html = '';

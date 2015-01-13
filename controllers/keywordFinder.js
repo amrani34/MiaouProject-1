@@ -15,12 +15,12 @@ module.exports = function (request, response) {
         keywords = request.query.keyword.split(',').map(function (keyword) {
             return new RegExp(keyword, 'i');
         }),
-        validUrl = /^(https?:\/\/)([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/,
+        validUrl = /^(https?:\/\/)/,
         nbComplete = 0,
         strictMode = request.query.strict || false,
-        toAvoid = ['<!--', '-->', 'function', ' > ', ' var ', ']]>'],
-        minLength = 40,
-        maxLentgh = 800,
+        toAvoid = ['<!--', '-->', 'function', ' > ', ' var ', ']]>', '»'],
+        minLength = 62 - keywords.length,
+        maxLentgh = 150,
         resultLimit = request.query.max_results || 2,
         html = '',
         $,
@@ -37,7 +37,7 @@ module.exports = function (request, response) {
                 html += chunk;
             }).on('end', function() {
                 $ = cheerio.load(html);
-                data = $('body').text().split(/[!().:;?]/);
+                data = $('body').text().split(/[!().:;?\r\n]/);
                 
                 data.forEach(function (text) {
                     // Check if string match valid condition
@@ -70,11 +70,13 @@ module.exports = function (request, response) {
                 console.log('Connection to '+ url +': OK');
                 results.success = true;
                 results.message = 'Found ' + results.p.length + ' result(s)';
-                response.status(200).json(results);
+                response.json(results);
             }).on('error', function(e) {
                 console.log('Connection to '+ url +': '+ e.message);
-                response.status(500).json({error: true, message: e.message });
+                response.json({error: true, message: e.message });
             });
         });
+    } else {
+        response.json({error: true, message: 'Bad url'});
     }
 };
