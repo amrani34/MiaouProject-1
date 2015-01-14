@@ -1,2 +1,0 @@
-# anonyoub
-Anonyoub Project
