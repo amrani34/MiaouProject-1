@@ -36,7 +36,7 @@ module.exports = function (request, response) {
             res.on('data', function(chunk) {
                 html += chunk;
             }).on('end', function() {
-                $ = cheerio.load(html);
+                $ = cheerio.load(html, {normalizeWhitespace: true});
                 data = $('body').text().split(/[!().:;?\r\n]/);
                 
                 data.forEach(function (text) {

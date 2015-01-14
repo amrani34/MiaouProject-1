@@ -75,7 +75,7 @@ $(document).ready(function () {
                         $btnGroup = $('<div />', {'class': 'btn-group'})
                         .append($('<button />', {html: '<i class="fa fa-shopping-cart"></i>'}).addClass('btn btn-default btn-xs btn-add'))
                         .append($('<button />', {html: '<i class="fa fa-trash"></i>'}).addClass('btn btn-default btn-xs btn-rm'));
-                        $p.append($('<a/>', {text: text, href: url, target: '_blank'})).append($btnGroup);
+                        $p.append($btnGroup).append($('<a/>', {text: text, href: url, target: '_blank'}));
                         $result.append($p);
                     });
                 }
