@@ -1,0 +1,59 @@
+@import "compass/css3";
+
+body {
+    font-family: "Open Sans", Ubuntu, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: #dbdfdf;
+    color: #545b63;
+}
+
+h1 {
+    color: #31318d;
+}
+
+#header {
+    background: #fff;
+}
+
+main {
+    padding: 22px 0;
+    margin-bottom: 60px;
+}
+
+#header,
+.wrapper {
+    @include box-shadow(0 0 3px rgba(0, 0, 0, 0.2));
+}
+
+.wrapper {
+    background-color: #fff;
+    padding: 20px;
+}
+
+#footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(45, 48, 51, 0.9);
+    color: #a5a6a7;
+    padding-top: 1.25em;
+}
+.btn-group {    
+    margin-right: 15px;
+}
+.ng-touched {
+	@include box-shadow(0 1px 1px rgba(0, 0, 0, 0.075) inset);
+	
+	&.ng-invalid {
+		border-color: #A94442;
+		&:focus {
+			@include box-shadow(0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 6px #CE8483);
+		}
+	}
+	&.ng-valid {
+		border-color: #3C763D;
+		&:focus {
+			@include box-shadow(0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 6px #67B168);
+		}
+	}
+}

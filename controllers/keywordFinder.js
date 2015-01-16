@@ -11,8 +11,8 @@ module.exports = function (request, response) {
         message: 'No urls found',
         p: []
     },
-        url = request.query.url.trim(),
-        keywords = request.query.keyword.split(',').map(function (keyword) {
+        url = request.body.url.trim(),
+        keywords = request.body.keywords.split(',').map(function (keyword) {
             return new RegExp(keyword, 'i');
         }),
         validUrl = /^(https?:\/\/)/,
@@ -21,7 +21,7 @@ module.exports = function (request, response) {
         toAvoid = ['<!--', '-->', 'function', ' > ', ' var ', ']]>', '»'],
         minLength = 62 - keywords.length,
         maxLentgh = 150,
-        resultLimit = request.query.max_results || 2,
+        resultLimit = request.body.max_results || 2,
         html = '',
         $,
         data,

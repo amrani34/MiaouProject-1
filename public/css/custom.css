@@ -1,41 +1,21 @@
-body {
-    font-family: "Open Sans", Ubuntu, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    background-color: #dbdfdf;
-    color: #545b63;
-}
+body { font-family: "Open Sans", Ubuntu, "Helvetica Neue", Helvetica, Arial, sans-serif; background-color: #dbdfdf; color: #545b63; }
 
-h1 {
-    color: #31318d;
-}
+h1 { color: #31318d; }
 
-#header {
-    background: #fff;
-}
+#header { background: #fff; }
 
-main {
-    padding: 22px 0;
-    margin-bottom: 60px;
-}
+main { padding: 22px 0; margin-bottom: 60px; }
 
-#header,
-.wrapper {
-    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.2);
-}
+#header, .wrapper { -moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.2); -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.2); box-shadow: 0 0 3px rgba(0, 0, 0, 0.2); }
 
-.wrapper {
-    background-color: #fff;
-    padding: 20px;
-}
+.wrapper { background-color: #fff; padding: 20px; }
 
-#footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: rgba(45, 48, 51, 0.9);;
-    color: #a5a6a7;
-    padding-top: 1.25em;
-}
-.btn-group {    
-    margin-right: 15px;
-}
+#footer { position: fixed; bottom: 0; left: 0; right: 0; background-color: rgba(45, 48, 51, 0.9); color: #a5a6a7; padding-top: 1.25em; }
+
+.btn-group { margin-right: 15px; }
+
+.ng-touched { -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset; -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset; }
+.ng-touched.ng-invalid { border-color: #A94442; }
+.ng-touched.ng-invalid:focus { -moz-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 6px #CE8483; -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 6px #CE8483; box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 6px #CE8483; }
+.ng-touched.ng-valid { border-color: #3C763D; }
+.ng-touched.ng-valid:focus { -moz-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 6px #67B168; -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 6px #67B168; box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 6px #67B168; }

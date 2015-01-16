@@ -21,7 +21,7 @@
             <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
     </head>
-    <body>
+    <body ng-app="miaou">
         <header id="header">
             <div class="container">
                 <h1>Miaou Project</h1>
@@ -30,39 +30,39 @@
         <main>
             <div class="container">
                 <div class="wrapper">
-                    <form id="miaouform" class="form-horizontal">
+                    <form id="keywordsForm" name="keywordsForm" class="form-horizontal" ng-submit="keywordsForm.$valid && fetchLinks()" ng-controller="LinkController">
                         <fieldset>
-                            <legend>Rechercher du contenu</legend>
+                            <legend>Rechercher des sites</legend>
                             <div class="form-group">
                                 <label for="keywords" class="col-sm-2 control-label">Mots-clés:</label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="keyword" name="keyword" placeholder="Miaou, Le chat" required>
+                                    <input ng-model="reqParams.keywords" type="text" class="form-control" id="keywords" name="keywords" placeholder="Miaou, Le chat" required>
                                     <span id="helpBlock" class="help-block">Mots-clés séparés par des virgules.</span>
                                 </div>
                                 <div class="col-sm-4">
                                     <label class="radio-inline">
-                                        <input type="radio" id="search_large" name="search_type" value="large" checked> Recherge large <br /> <small class="text-muted">ex: Mes <i>mots-clés</i></small>
+                                        <input ng-model="reqParams.searchType" type="radio" id="search_large" name="search_type" value="large" checked> Recherge large <br /> <small class="text-muted">ex: Mes <i>mots-clés</i></small>
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" id="search_exact" name="search_type" value="exact"> Recherche exacte <br /> <small class="text-muted">ex: <i>"Mes mots-clés"</i></small>
+                                        <input ng-model="reqParams.searchType" type="radio" id="search_exact" name="search_type" value="exact"> Recherche exacte <br /> <small class="text-muted">ex: <i>"Mes mots-clés"</i></small>
                                     </label>
                                 </div>
-                            </div>                    
+                            </div>                            
                             <div class="form-group">
-                                <label for="keywords" class="col-sm-2 control-label">Sites:</label>
-                                <div class="col-sm-8">
-                                    <textarea id="urls" class="form-control" rows="3" required></textarea>
-                                    <span id="helpBlock" class="help-block">Urls complètes, séparées par des virgules.</span>
+                                <div class="col-sm-offset-2 col-sm-5">
+                                    <button type="submit" class="btn btn-default"><i ng-class="{'fa fa-link': !waiting, 'fa fa-spinner fa-spin': waiting}"></i> Rechercher des liens</button>
+									<button type="button" class="btn btn-default" ng-click="emptyLinks()"><i class="fa fa-trash"></i> Vide cette merde !</button>
                                 </div>
-                                <div class="col-sm-2 text-right">
-                                    <p>
-                                        <button type="button" class="btn btn-default btn-sm search-engine btn-block" data-engine="google"><i class="fa fa-google"></i> Rechercher sur Google</button>
-                                        <button type="button" class="btn btn-default btn-sm search-engine btn-block" data-engine="bing"><i class="fa fa-windows"></i> Rechercher sur Bing</button>
-                                        <button type="button" class="btn btn-default btn-sm btn-block" id="emptyLinks"><i class="fa fa-trash"></i> Vider</button>
-                                    </p>
-                                </div>
+								<div class="col-sm-5">
+									<p class="lead"><span class="text-primary" id="nb-links">{{nbLinks}}</span> lien(s)</p>
+								</div>
                             </div>
-                            <div class="form-group">
+                        </fieldset>
+                    </form>
+					<form ng-show="{{linkList.length}}">
+						<fieldset>
+							<legend>Rechercher des mots-clés</legend>
+								<div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-5">
                                     <div class="radio">
                                         <label>
@@ -91,14 +91,17 @@
                                     <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Valider</button>
                                 </div>
                             </div>
-                        </fieldset>
-                    </form>
-                    <div id="info-area" class="row lead" style="display:none;">
-                        <div class="col-sm-6">
-                            <p><span class="text-primary" id="nb-results"></span> résultat(s)</p>
+						</fieldset>
+					</form>
+                    <div id="info-area" class="row lead">
+                        <div class="col-sm-4">
+                            
                         </div>
-                        <div class="col-sm-6">
-                            <p id="waiter"><img src="img/loader.gif" alt="..." /> Veuillez patienter</p>
+                        <div class="col-sm-4">
+                            <p><span class="text-primary" id="nb-results">{{keywordsList.length}}</span> résultat(s)</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <p id="waiter" ng-show="{{waiting}}"><img src="img/loader.gif" alt="..." /> Veuillez patienter</p>
                         </div>
                     </div>
                     <div id="result"></div>
@@ -136,6 +139,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="js/bootstrap.min.js"></script>
+        <script src="js/angular.min.js"></script>
         <script src="js/miaou.js"></script>
         <script src="js/script.js"></script>
     </body>

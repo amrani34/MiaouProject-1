@@ -3,8 +3,8 @@ var https = require('https');
 var cheerio = require('cheerio');
 module.exports = function (request, response) {
     'use strict';
-    var keywords = request.query.keywords.join(' '),
-        search = request.query.searchType === 'large' ? encodeURI(keywords) : encodeURI('"' + keywords + '"'),
+    var keywords = request.body.keywords,
+        search = request.body.searchType === 'large' ? encodeURI(keywords) : encodeURI('"' + keywords + '"'),
         engine = request.params.engine.toLowerCase(),
         selector,
         protocol,
