@@ -27,53 +27,48 @@
                 <h1>Miaou Project</h1>
             </div>
         </header>
-        <main>
+        <main ng-controller="GlobalController">
             <div class="container">
                 <div class="wrapper">
-                    <form id="keywordsForm" name="keywordsForm" class="form-horizontal" ng-submit="keywordsForm.$valid && fetchLinks()" ng-controller="LinkController">
+                    <form id="keywordsForm" name="keywordsForm" class="form-horizontal" ng-submit="keywordsForm.$valid && linkList.length && fetchKeywords()">
                         <fieldset>
-                            <legend>Rechercher des sites</legend>
+                            <legend>Rechercher des mot-clés</legend>
                             <div class="form-group">
                                 <label for="keywords" class="col-sm-2 control-label">Mots-clés:</label>
                                 <div class="col-sm-6">
-                                    <input ng-model="reqParams.keywords" type="text" class="form-control" id="keywords" name="keywords" placeholder="Miaou, Le chat" required>
+                                    <input ng-model="searchParams.keywords" type="text" class="form-control" id="keywords" name="keywords" placeholder="Miaou, Le chat" required>
                                     <span id="helpBlock" class="help-block">Mots-clés séparés par des virgules.</span>
                                 </div>
                                 <div class="col-sm-4">
                                     <label class="radio-inline">
-                                        <input ng-model="reqParams.searchType" type="radio" id="search_large" name="search_type" value="large" checked> Recherge large <br /> <small class="text-muted">ex: Mes <i>mots-clés</i></small>
+                                        <input ng-model="searchParams.searchType" type="radio" id="search_large" name="search_type" value="large" checked> Recherge large <br /> <small class="text-muted">ex: Mes <i>mots-clés</i></small>
                                     </label>
                                     <label class="radio-inline">
-                                        <input ng-model="reqParams.searchType" type="radio" id="search_exact" name="search_type" value="exact"> Recherche exacte <br /> <small class="text-muted">ex: <i>"Mes mots-clés"</i></small>
+                                        <input ng-model="searchParams.searchType" type="radio" id="search_exact" name="search_type" value="exact"> Recherche exacte <br /> <small class="text-muted">ex: <i>"Mes mots-clés"</i></small>
                                     </label>
                                 </div>
                             </div>                            
                             <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-5">
-                                    <button type="submit" class="btn btn-default"><i ng-class="{'fa fa-link': !waiting, 'fa fa-spinner fa-spin': waiting}"></i> Rechercher des liens</button>
+                                    <button type="button" class="btn btn-default" ng-click="fetchLinks()"><i ng-class="{'fa fa-link': !waiting, 'fa fa-spinner fa-spin': waiting}"></i> Rechercher des liens</button>
 									<button type="button" class="btn btn-default" ng-click="emptyLinks()"><i class="fa fa-trash"></i> Vide cette merde !</button>
                                 </div>
 								<div class="col-sm-5">
-									<p class="lead"><span class="text-primary" id="nb-links">{{nbLinks}}</span> lien(s)</p>
+									<p class="lead"><span class="text-primary" id="nb-links">{{linkList.length}}</span> lien(s)</p>
 								</div>
                             </div>
-                        </fieldset>
-                    </form>
-					<form ng-show="{{linkList.length}}">
-						<fieldset>
-							<legend>Rechercher des mots-clés</legend>
-								<div class="form-group">
+							<div class="form-group" ng-show="linkList.length">
                                 <div class="col-sm-offset-2 col-sm-5">
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" name="strict" id="strictMode0" value="0" checked>
+                                            <input ng-model="searchParams.strict" type="radio" name="strict" id="strictMode0" value="0" checked>
                                             La phrase doit contenir <b>l'un</b> des mot-clés
                                         </label>
                                     </div>
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" name="strict" id="strictMode1" value="1">
-                                            La phrase doit contenir <b>tous</b> les mot-clés
+                                            <input ng-model="searchParams.strict" type="radio" name="strict" id="strictMode1" value="1">
+                                            La phrase doit contenir <b>tous</b> les mot-clés 
                                         </label>
                                     </div>
                                 </div>
@@ -81,27 +76,24 @@
                                     <div class="form-group">
                                         <label for="max_results" class="col-sm-9 control-label">Nombre maximum de résultats par page:</label>
                                         <div class="col-sm-3">
-                                            <input type="number" class="form-control" id="max_results" name="max_results" placeholder="Nombre de résultats par page" value="2" min="1">
+                                            <input ng-model="searchParams.maxResults" type="number" class="form-control" id="max_results" name="max_results" placeholder="Nombre de résultats par page" min="1">
                                         </div>
                                     </div>                            
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" ng-show="linkList.length">
                                 <div class="col-sm-offset-2 col-sm-10">
                                     <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Valider</button>
                                 </div>
                             </div>
-						</fieldset>
-					</form>
-                    <div id="info-area" class="row lead">
-                        <div class="col-sm-4">
-                            
+                        </fieldset>
+                    </form>					
+                    <div id="info-area" class="row lead">                        
+                        <div class="col-sm-6">
+                            <p><span class="text-primary" id="nb-results">{{keywordsList.length}}</span> résultat(s)</p>							
                         </div>
-                        <div class="col-sm-4">
-                            <p><span class="text-primary" id="nb-results">{{keywordsList.length}}</span> résultat(s)</p>
-                        </div>
-                        <div class="col-sm-4">
-                            <p id="waiter" ng-show="{{waiting}}"><img src="img/loader.gif" alt="..." /> Veuillez patienter</p>
+                        <div class="col-sm-6">
+                            <p id="waiter" ng-show="waiting"><i class="fa fa-spinner fa-spin"></i> Veuillez patienter</p>
                         </div>
                     </div>
                     <div id="result"></div>
@@ -111,13 +103,13 @@
                             <div class="form-group">
                                 <label for="keywords" class="col-sm-2 control-label">Titre:</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="titre" name="titre" placeholder="Pose ta bite sur mon épaule" required>
+                                    <input type="text" class="form-control" id="titre" name="titre" placeholder="Pose ta bite sur mon épaule" value="{{searchParams.keywords}}" required>
                                 </div>
                             </div>                    
                             <div class="form-group">
                                 <label for="keywords" class="col-sm-2 control-label">Contenu:</label>
                                 <div class="col-sm-10">
-                                    <textarea id="panier" class="form-control" rows="6"></textarea>
+                                    <textarea id="panier" class="form-control" rows="12">{{keywordsList.join('. ')}}</textarea>
                                 </div>
                             </div>                            
                             <div class="form-group">

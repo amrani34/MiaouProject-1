@@ -16,61 +16,77 @@
 (function () {	
 	var app = angular.module('miaou', []);
 	
-	app.service('linkManager', function() {
-		var linkList = [],
-		validUrl = /^(https?:\/\/)/;
-		
-		return {
-			addLink: function(url) {
-				if (validUrl.test(url) && linkList.indexOf(url) === -1)
-					linkList.push(url);
-			},
-			getLinkCount: function () {
-				console.log(linkList);
-				return linkList.length;
-			},
-			getLinkList: function () {
-				return linkList;
-			},
-			emptyLinks: function () {
-				linkList.length = 0;
-			}
+	app.controller('GlobalController', ['$scope', '$http', function($scope, $http) {
+			
+		/*************************
+		 * Variables definition  *
+		 ************************/
+		var searchEngines = ['google', 'bing'],
+		validUrl = /^(https?:\/\/)/,
+		strToArray = function (str, sep) {
+			return str.split(sep).map(function(text) {
+				return text.trim();
+			});
 		};
-	});
-	
-	app.controller('LinkController', ['$scope', '$http', 'linkManager', function($scope, $http, linkManager) {
-		var searchEngines = ['google', 'bing'];
-		$scope.nbLinks = 0;
+		
+		$scope.linkList = [];
+		$scope.keywordsList = [];
 		$scope.emptyLinks = function() {
-			$scope.nbLinks = 0;
-			return linkManager.emptyLinks();
+			$scope.linkList.length = 0;
 		}
 		$scope.waiting = false;
-		$scope.reqParams = {
+		$scope.searchParams = {
 			keywords: '',
-			searchType: 'large'
+			searchType: 'large',
+			strict: 0,
+			maxResults: 2
 		};
 		
 		$scope.fetchLinks = function() {
 			$scope.waiting = true;
 			searchEngines.forEach(function (searchEngine) {
-				$http.post('/links/' + searchEngine, $scope.reqParams).success(function(response) {
+				var data = {
+					searchType: $scope.searchParams.searchType,
+					keywords: strToArray($scope.searchParams.keywords, ',')
+				};
+				
+				$http.post('/links/' + searchEngine, data).success(function(response) {
 					$scope.waiting = false;
 					response.urls.forEach(function(url) {
-						linkManager.addLink(url);						
+						if (validUrl.test(url) && $scope.linkList.indexOf(url) === -1)
+							$scope.linkList.push(url);						
 					});
-					$scope.nbLinks = linkManager.getLinkCount();
 				}).error(function () {
 					$scope.waiting = false;
 				});
 			});
 		};
-	}]);
-	
-	app.controller('KeywordController', function($scope) {
-		$scope.resultList = [];
-	});
-	
+		
+		$scope.fetchKeywords = function () {
+			$scope.waiting = true;
+			$scope.linkList.forEach(function (url) {
+				var data = {
+					url: url,
+					strict: $scope.searchParams.strict,
+					keywords: strToArray($scope.searchParams.keywords, ','),
+					maxResults: $scope.searchParams.maxResults
+				};
+				
+				$http.post('/keyword', data).success(function(response) {
+					$scope.waiting = false;
+					if (!response.success)
+						return;
+					
+					response.p.forEach(function(text) {
+						if ($scope.keywordsList.indexOf(text) === -1)
+							$scope.keywordsList.push(text);						
+					});
+				}).error(function () {
+					$scope.waiting = false;
+				});
+			});
+		};
+	}]);	
 })();
 
 

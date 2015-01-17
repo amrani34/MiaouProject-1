@@ -12,12 +12,12 @@ module.exports = function (request, response) {
         p: []
     },
         url = request.body.url.trim(),
-        keywords = request.body.keywords.split(',').map(function (keyword) {
+        keywords = request.body.keywords.map(function (keyword) {
             return new RegExp(keyword, 'i');
         }),
         validUrl = /^(https?:\/\/)/,
         nbComplete = 0,
-        strictMode = request.query.strict || false,
+        strictMode = request.body.strict || false,
         toAvoid = ['<!--', '-->', 'function', ' > ', ' var ', ']]>', '»'],
         minLength = 62 - keywords.length,
         maxLentgh = 150,
@@ -73,10 +73,10 @@ module.exports = function (request, response) {
                 response.json(results);
             }).on('error', function(e) {
                 console.log('Connection to '+ url +': '+ e.message);
-                response.json({error: true, message: e.message });
+                response.status(500).json({error: true, message: e.message });
             });
         });
     } else {
-        response.json({error: true, message: 'Bad url'});
+        response.status(500).json({error: true, message: 'Bad url'});
     }
 };
