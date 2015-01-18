@@ -17,3 +17,19 @@ main { padding: 22px 0; margin-bottom: 60px; }
 .ng-touched.ng-invalid:focus { -moz-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 6px #CE8483; -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 6px #CE8483; box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 6px #CE8483; }
 .ng-touched.ng-valid { border-color: #3C763D; }
 .ng-touched.ng-valid:focus { -moz-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 6px #67B168; -webkit-box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 6px #67B168; box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 6px #67B168; }
+
+/**
+* Animations
+*/
+.result .actions { min-width: 110px; }
+.result.ng-enter, .result.ng-leave, .result.ng-move { -moz-transition: linear 0.5s all; -o-transition: linear 0.5s all; -webkit-transition: linear 0.5s all; transition: linear 0.5s all; }
+.result.ng-enter, .result.ng-move { opacity: 0; height: 0; overflow: hidden; }
+.result.ng-move.ng-move-active, .result.ng-enter.ng-enter-active { opacity: 1; }
+.result.ng-leave { opacity: 1; overflow: hidden; }
+.result.ng-leave.ng-leave-active { opacity: 0; height: 0; padding-top: 0; padding-bottom: 0; }
+
+.animate-show { opacity: 1; }
+
+.animate-show.ng-hide { opacity: 0; }
+
+.animate-show.ng-hide-add.ng-hide-add-active, .animate-show.ng-hide-remove.ng-hide-remove-active { -moz-transition: linear 0.5s all; -o-transition: linear 0.5s all; -webkit-transition: linear 0.5s all; transition: linear 0.5s all; }

@@ -1,6 +1,6 @@
 {
   "name": "MiaouProject",
-  "version": "0.5.1",
+  "version": "0.5.6",
   "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit",
   "main": "app.js",
   "scripts": {
