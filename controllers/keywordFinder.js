@@ -18,7 +18,7 @@ module.exports = function (request, response) {
         validUrl = /^(https?:\/\/)/,
         nbComplete = 0,
         strictMode = request.body.strict || false,
-        toAvoid = ['<!--', '-->', 'function', '>', '<', '_', ' var ', ']]>', '»'],
+        toAvoid = ['<!--', '-->', 'function', '>', '<', '_', ' var ', ']]>', '»', '|'],
         minLength = 62 - keywords.length,
         maxLentgh = 150,
         resultLimit = request.body.maxResults || 2,
@@ -35,9 +35,12 @@ module.exports = function (request, response) {
             
             res.on('data', function(chunk) {
                 html += chunk;
+            }).on('error', function(e) {
+                console.log('Connection to '+ url +': '+ e.message);
+                response.status(500).json({error: true, message: e.message });
             }).on('end', function() {
                 $ = cheerio.load(html, {normalizeWhitespace: true});
-                data = $('body').text().split(/[!().:;?\r\n]/);
+                data = $('body').text().split(/[!().;?\r\n]/);
                 
                 data.forEach(function (text) {
                     // Check if string match valid condition
@@ -71,9 +74,6 @@ module.exports = function (request, response) {
                 results.success = true;
                 results.message = 'Found ' + results.p.length + ' result(s)';
                 response.json(results);
-            }).on('error', function(e) {
-                console.log('Connection to '+ url +': '+ e.message);
-                response.status(500).json({error: true, message: e.message });
             });
         });
     } else {
