@@ -101,6 +101,8 @@ main {
 }
 
 .animate-show.ng-hide-add.ng-hide-add-active,
-.animate-show.ng-hide-remove.ng-hide-remove-active {
+.animate-show.ng-hide-remove.ng-hide-remove-active,
+.progress-bar
+{
 	@include transition(0.5s linear all);
 }

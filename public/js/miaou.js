@@ -14,7 +14,8 @@
  */
 
 (function () {
-	var app = angular.module('miaou', []);
+    'use strict';
+	var app = angular.module('miaou', ['miaouAnimate']);
 
 	app.controller('KeywordsController', ['$scope', '$http', function ($scope, $http) {
 			/*************************
@@ -40,8 +41,10 @@
 			$scope.linkList = [];
 			$scope.keywordsList = [];
 			$scope.results = [];
+			$scope.progress = 0;
 
 			$scope.emptyLinks = function () {
+                $scope.progress = 0;
 				$scope.linkList.length = 0;
 				$scope.keywordsList.length = 0;
 				$scope.results.length = 0;
@@ -101,6 +104,7 @@
 							$http.post('/keyword', keywordData).success(function (response) {
 								nbResponse++;
 								
+                                $scope.progress = parseInt(nbResponse / nbRequest * 100, 10);
 								if (nbResponse === nbRequest)
 									$scope.waiting = false;
 								
@@ -122,6 +126,7 @@
 							}).error(function () {
 								console.log('miaou');
 								nbResponse++;
+                                $scope.progress = parseInt(nbResponse / nbRequest * 100, 10);
 								if (nbResponse === nbRequest)
 									$scope.waiting = false;
 							});

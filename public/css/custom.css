@@ -32,4 +32,4 @@ main { padding: 22px 0; margin-bottom: 60px; }
 
 .animate-show.ng-hide { opacity: 0; }
 
-.animate-show.ng-hide-add.ng-hide-add-active, .animate-show.ng-hide-remove.ng-hide-remove-active { -moz-transition: linear 0.5s all; -o-transition: linear 0.5s all; -webkit-transition: linear 0.5s all; transition: linear 0.5s all; }
+.animate-show.ng-hide-add.ng-hide-add-active, .animate-show.ng-hide-remove.ng-hide-remove-active, .progress-bar { -moz-transition: linear 0.5s all; -o-transition: linear 0.5s all; -webkit-transition: linear 0.5s all; transition: linear 0.5s all; }
