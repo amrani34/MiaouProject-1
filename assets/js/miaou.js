@@ -40,23 +40,26 @@
 
 			$scope.linkList = [];
 			$scope.keywordsList = [];
-			$scope.results = [];
+			$scope.resultsIn = [];
+			$scope.resultsOut = [];
 			$scope.progress = 0;
 
 			$scope.emptyLinks = function () {
                 $scope.progress = 0;
 				$scope.linkList.length = 0;
 				$scope.keywordsList.length = 0;
-				$scope.results.length = 0;
+				$scope.resultsIn.length = 0;
+				$scope.resultsOut.length = 0;
 				$scope.searchParams.keywords = '';
 				$scope.waiting = false;				
 			}
 
 			$scope.removeResult = function (index) {
-				var resultRemoved = $scope.results.splice(index, 1)[0];
-				resultRemoved.data.forEach(function (text) {
-					removeTextFromResults(text);
-				});
+				$scope.resultsIn.splice(index, 1)[0];
+			}
+            
+            $scope.addResult = function (index) {
+				$scope.resultsIn.push($scope.resultsOut.splice(index, 1)[0]);
 			}
 
 			$scope.removeText = function (index, result) {
@@ -70,8 +73,8 @@
 			$scope.showLinks = false;
 			$scope.searchParams = {
 				keywords: '',
-				searchType: 'large',
-				strict: 0,
+				searchType: 'exact',
+				strict: 1,
 				maxResults: 2,
 				minLength: 0
 			};
@@ -98,7 +101,7 @@
 							var keywordData = {
 								url: url,
 								strict: $scope.searchParams.strict,
-								keywords: strToArray($scope.searchParams.keywords, ','),
+								keywords: strToArray($scope.searchParams.keywords, ' '),
 								maxResults: $scope.searchParams.maxResults
 							};
 
@@ -111,19 +114,18 @@
 								
 								if (!response.success)
 									return;
-								var results = {
-									origin: keywordData.url,
-									active: true,
-									data: []
-								}
+								                                
 								response.in.forEach(function (text) {
-									if ($scope.keywordsList.indexOf(text) !== -1)
+									if ($scope.resultsIn.indexOf(text) !== -1)
 										return false;
-									$scope.keywordsList.push(text);
-									results.data.push(text);
+									$scope.resultsIn.push(text);
 								});
-								if (results.data.length)
-									$scope.results.push(results);
+                                
+                                response.out.forEach(function (text) {
+									if ($scope.resultsOut.indexOf(text) !== -1)
+										return false;
+									$scope.resultsOut.push(text);
+								});
 							}).error(function () {
 								nbResponse++;
                                 $scope.progress = parseInt(nbResponse / nbRequest * 100, 10);

@@ -7,11 +7,10 @@
                     <label for="keywords" class="col-sm-2 control-label">Mots-clés:</label>
                     <div class="col-sm-6">
                         <input ng-model="searchParams.keywords" type="text" class="form-control" id="keywords" name="keywords" placeholder="Miaou, Le chat" required>
-                        <span id="helpBlock" class="help-block">Mots-clés séparés par des virgules.</span>
                     </div>
                     <div class="col-sm-4">
                         <label class="radio-inline">
-                            <input ng-model="searchParams.searchType" type="radio" id="search_large" name="search_type" value="large" checked> Recherge large <br /> <small class="text-muted">ex: Mes <i>mots-clés</i></small>
+                            <input ng-model="searchParams.searchType" type="radio" id="search_large" name="search_type" value="large"> Recherge large <br /> <small class="text-muted">ex: Mes <i>mots-clés</i></small>
                         </label>
                         <label class="radio-inline">
                             <input ng-model="searchParams.searchType" type="radio" id="search_exact" name="search_type" value="exact"> Recherche exacte <br /> <small class="text-muted">ex: <i>"Mes mots-clés"</i></small>
@@ -22,7 +21,7 @@
                     <div class="col-sm-offset-2 col-sm-5">
                         <div class="radio">
                             <label>
-                                <input ng-model="searchParams.strict" type="radio" name="strict" id="strictMode0" value="0" checked>
+                                <input ng-model="searchParams.strict" type="radio" name="strict" id="strictMode0" value="0">
                                 La phrase doit contenir <b>l'un</b> des mot-clés
                             </label>
                         </div>
@@ -51,7 +50,8 @@
                     <div class="col-sm-5">
                         <p class="lead">
                             <span class="text-primary" id="nb-links">{{linkList.length}}</span> lien(s),
-                            <span class="text-primary" id="nb-results">{{keywordsList.length}}</span> résultat(s) 
+                            <span class="text-primary" id="nb-results-in">{{resultsIn.length}}</span> résultat(s), 
+                            <span class="text-danger" id="nb-results-in">{{resultsOut.length}}</span> exclu(s) 
                             <span class="animate-show" ng-show="waiting"><i class="fa fa-spinner fa-spin"></i> Veuillez patienter</span>
                         </p>									
                     </div>
@@ -67,14 +67,15 @@
 
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="#results" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-search"></i> Résultats</a></li>
+                <li role="presentation" class="active"><a href="#results-in" aria-controls="results-in" role="tab" data-toggle="tab"><i class="fa fa-search"></i> Résultats inclus</a></li>
+                <li role="presentation"><a href="#results-out" aria-controls="results-out" role="tab" data-toggle="tab"><i class="fa fa-times"></i> Résultats exclus</a></li>
                 <li role="presentation"><a href="#links" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-link"></i> Liens</a></li>
             </ul>
 
             <!-- Tab panes -->
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane fade in active" id="results">
-                    <div class="table-responsive animate-show" ng-show="results.length">
+                <div role="tabpanel" class="tab-pane fade in active" id="results-in">
+                    <div class="table-responsive animate-show" ng-show="resultsIn.length">
                         <table class="table table-condensed table-striped" id="results-table">
                             <thead>
                                 <tr>
@@ -83,17 +84,36 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="result" ng-repeat="result in results" ng-show="result.active">
+                                <tr class="result" ng-repeat="result in resultsIn">
                                     <td>
-                                        <p ng-repeat="text in result.data">
-                                            <span ng-click="removeText($index, result)">{{text}}</span>										
-                                        </p>
+                                        <span>{{result}}</span>                                        
                                     </td>
-                                    <td class="actions">
-                                        <div class="btn-group" data-toggle="tooltip" data-placement="top" title="{{result.origin}}">
-                                            <a href="{{result.origin}}" target="_blank" class="btn btn-default"><i class="fa fa-eye"></i></a>
-                                            <button type="button" class="btn btn-default" ng-click="removeResult($index)"><i class="fa fa-trash"></i></button>
-                                        </div>
+                                    <td class="actions text-right">
+                                        <button type="button" class="btn btn-default" ng-click="removeResult($index)"><i class="fa fa-trash"></i></button>     
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="results-out">
+                    <div class="table-responsive animate-show" ng-show="resultsOut.length">
+                        <table class="table table-condensed table-striped" id="results-table">
+                            <thead>
+                                <tr>
+                                    <th>Phrase exclue</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="result" ng-repeat="result in resultsOut">
+                                    <td>
+                                        <span>{{result}}</span>                                        
+                                    </td>
+                                    <td class="actions text-right">
+                                        <button type="button" class="btn btn-default" ng-click="addResult($index)">
+                                            <i class="fa fa-cart-plus"></i>
+                                        </button>     
                                     </td>
                                 </tr>
                             </tbody>

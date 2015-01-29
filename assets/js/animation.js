@@ -1,6 +1,7 @@
 (function(){
     'use strict';
     var app = angular.module('miaouAnimate', ['ngAnimate']);
+    /*
     app.animation('.result', function() {
         return {
             enter: function(element, done) {                
@@ -16,4 +17,5 @@
             }
         };
     });
+    */
 })();
