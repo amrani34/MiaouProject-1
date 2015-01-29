@@ -11,8 +11,6 @@ This app allow you to easily build SEO content, focusing on keywords and express
  ```
  $ cd /Path/to/the/directory
  $ npm update
- $ node app.js
+ $ sails lift
  ```
 
-Your can specify a port after ```app.js``` (default is 8080)
-App should be available at http://localhost:8080.

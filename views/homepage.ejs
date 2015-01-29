@@ -1,0 +1,134 @@
+<div class="container">
+    <div class="wrapper" ng-controller="KeywordsController">
+        <form id="keywordsForm" name="keywordsForm" class="form-horizontal" ng-submit="keywordsForm.$valid && fetchKeywords()">
+            <fieldset>
+                <legend>Rechercher des mot-clés</legend>
+                <div class="form-group">
+                    <label for="keywords" class="col-sm-2 control-label">Mots-clés:</label>
+                    <div class="col-sm-6">
+                        <input ng-model="searchParams.keywords" type="text" class="form-control" id="keywords" name="keywords" placeholder="Miaou, Le chat" required>
+                        <span id="helpBlock" class="help-block">Mots-clés séparés par des virgules.</span>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="radio-inline">
+                            <input ng-model="searchParams.searchType" type="radio" id="search_large" name="search_type" value="large" checked> Recherge large <br /> <small class="text-muted">ex: Mes <i>mots-clés</i></small>
+                        </label>
+                        <label class="radio-inline">
+                            <input ng-model="searchParams.searchType" type="radio" id="search_exact" name="search_type" value="exact"> Recherche exacte <br /> <small class="text-muted">ex: <i>"Mes mots-clés"</i></small>
+                        </label>
+                    </div>
+                </div>                            
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-5">
+                        <div class="radio">
+                            <label>
+                                <input ng-model="searchParams.strict" type="radio" name="strict" id="strictMode0" value="0" checked>
+                                La phrase doit contenir <b>l'un</b> des mot-clés
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input ng-model="searchParams.strict" type="radio" name="strict" id="strictMode1" value="1">
+                                La phrase doit contenir <b>tous</b> les mot-clés 
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="form-group">
+                            <label for="max_results" class="col-sm-9 control-label">Nombre maximum de résultats par page:</label>
+                            <div class="col-sm-3">
+                                <input ng-model="searchParams.maxResults" type="number" class="form-control" id="max_results" name="max_results" placeholder="Nombre de résultats par page" min="1">
+                            </div>
+                        </div>                            
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-5">
+                        <button type="submit" class="btn btn-primary"><i ng-class="{'fa fa-search': !waiting, 'fa fa-spinner fa-spin': waiting}"></i> Rechercher</button>
+                        <button type="button" class="btn btn-default" ng-click="emptyLinks()"><i class="fa fa-trash"></i> Vider</button>
+                        
+                    </div>
+                    <div class="col-sm-5">
+                        <p class="lead">
+                            <span class="text-primary" id="nb-links">{{linkList.length}}</span> lien(s),
+                            <span class="text-primary" id="nb-results">{{keywordsList.length}}</span> résultat(s) 
+                            <span class="animate-show" ng-show="waiting"><i class="fa fa-spinner fa-spin"></i> Veuillez patienter</span>
+                        </p>									
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+        <div class="progress animate-show" ng-show="waiting">
+            <div class="progress-bar" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progress}}%;">
+                {{progress}}%
+            </div>
+        </div>
+        <div role="tabpanel">
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#results" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-search"></i> Résultats</a></li>
+                <li role="presentation"><a href="#links" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-link"></i> Liens</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane fade in active" id="results">
+                    <div class="table-responsive animate-show" ng-show="results.length">
+                        <table class="table table-condensed table-striped" id="results-table">
+                            <thead>
+                                <tr>
+                                    <th>Phrase contenant le(s) mot(s)-clé(s)</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="result" ng-repeat="result in results" ng-show="result.active">
+                                    <td>
+                                        <p ng-repeat="text in result.data">
+                                            <span ng-click="removeText($index, result)">{{text}}</span>										
+                                        </p>
+                                    </td>
+                                    <td class="actions">
+                                        <div class="btn-group" data-toggle="tooltip" data-placement="top" title="{{result.origin}}">
+                                            <a href="{{result.origin}}" target="_blank" class="btn btn-default"><i class="fa fa-eye"></i></a>
+                                            <button type="button" class="btn btn-default" ng-click="removeResult($index)"><i class="fa fa-trash"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="links">
+                    <ul class="list-unstyled" ng-repeat="link in linkList">
+                        <li><a href="{{link}}" class="label label-default" target="_blank">{{link}}</a></li>
+                    </ul>		  
+                </div>
+            </div>
+
+        </div>
+        <form id="wpForm" name="wpForm" class="form-horizontal">
+            <fieldset>
+                <legend>Créer un article</legend>
+                <div class="form-group">
+                    <label for="keywords" class="col-sm-2 control-label">Titre:</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="titre" name="titre" placeholder="Mon titre d'une éloquence rare" value="{{searchParams.keywords}}" required>
+                    </div>
+                </div>                    
+                <div class="form-group">
+                    <label for="keywords" class="col-sm-2 control-label">Contenu:</label>
+                    <div class="col-sm-10">
+                        <textarea id="panier" class="form-control" rows="12">{{keywordsList.join('. ')}}</textarea>
+                    </div>
+                </div>                            
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-paper-plane"></i> Envoyer</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
