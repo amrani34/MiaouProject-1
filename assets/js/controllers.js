@@ -1,7 +1,7 @@
 /* 
  * Angular MiaouProject App
  * 
- * miaou.js - Last modified: 14 janv. 2015
+ * Controllers
  * 
  * DISCLAIMER
  * 
@@ -10,13 +10,30 @@
  * needs please refer to http://www.webincolor.fr for more information.
  * 
  *  @author    Gary PEGEOT <garypegeot@gmail.com>
- *  @license   GNU
+ *  @license   MIT
  */
 
 (function () {
     'use strict';
-	var app = angular.module('miaou', ['miaouAnimate']);
+	var app = angular.module('miaouControllers', []);
 
+	app.controller('MailFormController', ['$scope', '$http', function ($scope, $http) {
+        $scope.sendMail = function () {
+            $http.post('/mailer/send', $scope.article).success(function (response) {
+            }).error(function () {
+            });
+        };
+        $scope.startEdit = function (title, data) {
+            $scope.article.title = title;
+            $scope.article.content = data.map(function(obj){
+                return obj.text.trim() + '. ';
+            });
+            $scope.modeEdit = true;            
+        };
+        $scope.article = {};
+        $scope.modeEdit = false;        
+    }]);
+    
 	app.controller('KeywordsController', ['$scope', '$http', function ($scope, $http) {
 			/*************************
 			 * Variables definition  *
@@ -116,15 +133,15 @@
 									return;
 								                                
 								response.in.forEach(function (text) {
-									if ($scope.resultsIn.indexOf(text) !== -1)
+									if (searchText(text, $scope.resultsIn))
 										return false;
-									$scope.resultsIn.push(text);
+									$scope.resultsIn.push({text: text, origin: url});
 								});
                                 
                                 response.out.forEach(function (text) {
-									if ($scope.resultsOut.indexOf(text) !== -1)
+									if (searchText(text, $scope.resultsOut))
 										return false;
-									$scope.resultsOut.push(text);
+									$scope.resultsOut.push({text: text, origin: url});
 								});
 							}).error(function () {
 								nbResponse++;
