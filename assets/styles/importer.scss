@@ -1,14 +1,15 @@
 @import "compass/css3";
 @import "variables";
+@import "bootswatch-paper";
 
-body {
-    font-family: "Open Sans", Ubuntu, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    background-color: #dbdfdf;
-    color: #545b63;
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: $font-family-serif;
+    font-weight: 400;
 }
-
-h1 {
-    color: $primary-color;
+#logo {
+	float: left;
+	margin-right: 8px;
+	margin-top: 18px;
 }
 
 #header {
@@ -27,7 +28,8 @@ main {
 
 .wrapper {
     background-color: #fff;
-    padding: 20px;
+    padding: 20px 20px 0;
+    margin-bottom: 20px;
 }
 
 #footer {
@@ -40,43 +42,18 @@ main {
     padding-top: 1.25em;
 }
 .ng-touched {
-	@include box-shadow(0 1px 1px rgba(0, 0, 0, 0.075) inset);
-
 	&.ng-invalid {
-		border-color: #A94442;
-		&:focus {
-			@include box-shadow(0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 6px #CE8483);
-		}
+        @include box-shadow(inset 0 -1px 0 $brand-danger);
+        &:focus {
+            @include box-shadow(inset 0 -2px 0 $brand-danger);
+        }
 	}
 	&.ng-valid {
-		border-color: #3C763D;
-		&:focus {
-			@include box-shadow(0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 6px #67B168);
+        @include box-shadow(inset 0 -1px 0 $brand-success);
+        &:focus {
+			@include box-shadow(inset 0 -2px 0 $brand-success);
 		}
 	}
-}
-/** Buttons **/
-
-.btn {
-    @include box-shadow(1px 1px 2px rgba(0, 0, 0, 0.3));
-    @include transition(0.5s linear all);
-}
-
-.btn-primary {
-    background-color: $primary-color;
-    border-color: transparent;
-    
-    &:hover {
-        background-color: darken($primary-color, 10%);
-        border-color: transparent;
-    }
-}
-
-.btn-default {
-    color: #666;
-    background-color: #fff;
-    border-color: #eee;
-    @include box-shadow(1px 1px 2px rgba(0, 0, 0, 0.1));
 }
 
 /**
@@ -127,7 +104,8 @@ main {
 
 .animate-show.ng-hide-add.ng-hide-add-active,
 .animate-show.ng-hide-remove.ng-hide-remove-active,
-.progress-bar
+.progress-bar,
+.alert
 {
 	@include transition(0.5s linear all);
 }

@@ -1,5 +1,5 @@
-<div class="container">
-    <div class="wrapper" ng-controller="KeywordsController">
+<div class="container" ng-controller="KeywordsController">
+    <div class="wrapper">
         <form id="keywordsForm" name="keywordsForm" class="form-horizontal" ng-submit="keywordsForm.$valid && fetchKeywords()">
             <fieldset>
                 <legend>Rechercher des mot-clés</legend>
@@ -59,9 +59,7 @@
             </fieldset>
         </form>
         <div class="progress animate-show" ng-show="waiting">
-            <div class="progress-bar" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progress}}%;">
-                {{progress}}%
-            </div>
+            <div class="progress-bar" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progress}}%;"></div>
         </div>
         <div role="tabpanel">
 
@@ -131,34 +129,36 @@
                 </div>
             </div>
         </div>
-        <div class="panel panel-default" ng-controller="MailFormController">
-            <div class="panel-heading">
-                <h3 class="panel-title">Créer un article | <span class="text-primary">{{searchParams.keywords}}</span></h3>
-            </div>
-            <div class="panel-body">
-                <button class="btn btn-primary animate-show" ng-hide="modeEdit" ng-click="startEdit(searchParams.keywords, resultsIn)" ng-disabled="!resultsIn.length"><i class="fa fa-pencil-square-o"></i> Créer un article</button>
-                <form id="wpForm" name="wpForm" class="form-horizontal animate-show" ng-show="modeEdit" ng-submit="wpForm.$valid && sendMail()">
-                    <fieldset>
-                        <div class="form-group">
-                            <label for="keywords" class="col-sm-2 control-label">Titre:</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="titre" name="titre" placeholder="Mon titre d'une éloquence rare" ng-model="article.title" required>
-                            </div>
-                        </div>                    
-                        <div class="form-group">
-                            <label for="keywords" class="col-sm-2 control-label">Contenu:</label>
-                            <div class="col-sm-10">
-                                <textarea id="panier" class="form-control" rows="12" ng-model="article.content" required></textarea>
-                            </div>
-                        </div>                            
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class="btn btn-primary" ng-disabled="!wpForm.$valid"><i class="fa fa-paper-plane"></i> Envoyer</button>
-                            </div>
+    </div>
+    <div class="panel panel-default" ng-controller="MailFormController">
+        <div class="panel-heading">
+            <h3 class="panel-title">Créer un article | <span class="text-primary">{{searchParams.keywords}}</span></h3>
+        </div>
+        <div class="panel-body">
+			<div class="alert animate-show {{alertClass}}" role="alert" ng-show="showAlert">{{alertMessage}}</div>
+            <button class="btn btn-primary animate-show" ng-hide="modeEdit" ng-click="startEdit(searchParams.keywords, resultsIn)" ng-disabled="!resultsIn.length"><i class="fa fa-pencil-square-o"></i> Créer un article</button>
+            <form id="wpForm" name="wpForm" class="form-horizontal animate-show" ng-show="modeEdit" ng-submit="wpForm.$valid && sendMail()">
+                <fieldset>
+                    <div class="form-group">
+                        <label for="keywords" class="col-sm-2 control-label">Titre:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="titre" name="titre" placeholder="Mon titre d'une éloquence rare" ng-model="article.title" required>
                         </div>
-                    </fieldset>
-                </form>
-            </div>
+                    </div>                    
+                    <div class="form-group">
+                        <label for="keywords" class="col-sm-2 control-label">Contenu:</label>
+                        <div class="col-sm-10">
+                            <textarea id="panier" class="form-control" rows="12" ng-model="article.content" required></textarea>
+                        </div>
+                    </div>                            
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-4">
+                            <button type="submit" class="btn btn-primary" ng-disabled="!wpForm.$valid"><i class="fa fa-paper-plane"></i> Envoyer</button>
+                        </div>
+                        <div class="col-sm-6"><span class="text-info">{{wordCount}}</span> mot(s)</div>
+                    </div>
+                </fieldset>
+            </form>
         </div>
     </div>
 </div>

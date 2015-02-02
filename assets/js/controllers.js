@@ -17,21 +17,40 @@
     'use strict';
 	var app = angular.module('miaouControllers', []);
 
-	app.controller('MailFormController', ['$scope', '$http', function ($scope, $http) {
-        $scope.sendMail = function () {
-            $http.post('/mailer/send', $scope.article).success(function (response) {
-            }).error(function () {
+	app.controller('MailFormController', ['$scope', '$http', '$log', function ($scope, $http, $log) {
+        $scope.sendMail = function () {            
+            $scope.alertClass = 'alert-info';
+            $scope.alertMessage = 'Veuillez patienter';
+            $scope.showAlert = true;
+            
+            $http.post('/mail/send', $scope.article).success(function (response) {
+                $log.log(response);
+                $scope.alertClass = 'alert-success';
+                $scope.alertMessage = 'Mail envoyé';
+            }).error(function (err) {
+                $log.error(err);
+                $scope.alertClass = 'alert-danger';
+                $scope.alertMessage = 'Échec de l\'envoi';
             });
         };
+        
         $scope.startEdit = function (title, data) {
             $scope.article.title = title;
             $scope.article.content = data.map(function(obj){
-                return obj.text.trim() + '. ';
-            });
+                var text = obj.text.trim();
+                $scope.wordCount += text.split(' ').length;
+                return text;
+            }).join('. ');
             $scope.modeEdit = true;            
         };
+        
         $scope.article = {};
+        $scope.wordCount = 0;
         $scope.modeEdit = false;        
+        $scope.showAlert = false;
+        $scope.alertClass = '';
+        $scope.alertMessage = '';
+        
     }]);
     
 	app.controller('KeywordsController', ['$scope', '$http', function ($scope, $http) {
@@ -78,16 +97,8 @@
             $scope.addResult = function (index) {
 				$scope.resultsIn.push($scope.resultsOut.splice(index, 1)[0]);
 			}
-
-			$scope.removeText = function (index, result) {
-				var text = result.data.splice(index, 1)[0];
-				removeTextFromResults(text);
-				if (!result.data.lentgh)
-					$scope.removeResult($scope.results.indexOf(result));
-			}
-
+            
 			$scope.waiting = false;
-			$scope.showLinks = false;
 			$scope.searchParams = {
 				keywords: '',
 				searchType: 'exact',
