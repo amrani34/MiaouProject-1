@@ -1,0 +1,96 @@
+<div class="container" ng-controller="MultiSearchController">
+    <div class="wrapper">
+        <form id="keywordsForm" name="keywordsForm" class="form-horizontal" ng-submit="keywordsForm.$valid && fetchKeywords()">
+            <fieldset>
+                <legend>Recherche multiple</legend>
+                <div class="form-group">
+                    <label for="keywords" class="col-sm-2 control-label">Mots-clés:</label>
+                    <div class="col-sm-6">
+                        <textarea ng-model="searchParams.keywords" rows="8" type="text" class="form-control" id="keywords" name="keywords" placeholder="Miaou Le chat" required></textarea>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="radio-inline">
+                            <input ng-model="searchParams.searchType" type="radio" id="search_large" name="search_type" value="large"> Recherge large <br /> <small class="text-muted">ex: Mes <i>mots-clés</i></small>
+                        </label>
+                        <label class="radio-inline">
+                            <input ng-model="searchParams.searchType" type="radio" id="search_exact" name="search_type" value="exact"> Recherche exacte <br /> <small class="text-muted">ex: <i>"Mes mots-clés"</i></small>
+                        </label>
+                    </div>
+                </div>                            
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-5">
+                        <div class="radio">
+                            <label>
+                                <input ng-model="searchParams.strict" type="radio" name="strict" id="strictMode0" value="0">
+                                La phrase doit contenir <b>l'un</b> des mot-clés
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input ng-model="searchParams.strict" type="radio" name="strict" id="strictMode1" value="1">
+                                La phrase doit contenir <b>tous</b> les mot-clés 
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="form-group">
+                            <label for="max_results" class="col-sm-9 control-label">Nombre maximum de résultats par page:</label>
+                            <div class="col-sm-3">
+                                <input ng-model="searchParams.maxResults" type="number" class="form-control" id="max_results" name="max_results" placeholder="Nombre de résultats par page" min="1">
+                            </div>
+                        </div>                            
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-3">
+                        <button type="submit" class="btn btn-primary"><i ng-class="{'fa fa-search': !waiting, 'fa fa-spinner fa-spin': waiting}"></i> Rechercher</button>
+                        <button type="button" class="btn btn-default" ng-click="emptyLinks()"><i class="fa fa-trash"></i> Vider</button>
+                        
+                    </div>
+                    <div class="col-sm-7">
+                        <p class="lead">
+                            <span class="text-primary" id="nb-links">{{keywordsList.length}}</span> Mots clé(s), recherché(s) sur <span class="text-primary" id="nb-req">{{nbRequests}}</span> page(s) avec
+                            <span class="text-primary" id="nb-rep">{{nbResponses}}</span> réponse(s)<br />
+                            <span class="animate-show" ng-show="waiting"><i class="fa fa-spinner fa-spin"></i> Veuillez patienter</span>
+                        </p>									
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="progress animate-show" ng-show="waiting">
+        <div class="progress-bar" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progress}}%;"></div>
+    </div>
+    <section id="multisearch-results" ng-repeat="item in keywordsList">
+        <div class="panel panel-default animate-show" ng-controller="MailFormController">
+            <div class="panel-heading">
+                <h3 class="panel-title">Créer un article | {{item.keywords.join(' ')}} - <span class="text-success">{{item.resultsIn.length}} résultat(s)</span></h3>
+            </div>
+            <div class="panel-body">
+                <div class="alert animate-show {{alertClass}}" role="alert" ng-show="showAlert">{{alertMessage}}</div>                
+                <form id="wpForm" name="wpForm" class="form-horizontal animate-show" ng-submit="wpForm.$valid && sendMail(item.emailData)">
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="title" class="col-sm-2 control-label">Titre:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="title_{{item.id}}" name="title_{{item.id}}" placeholder="Mon titre d'une éloquence rare" ng-model="item.emailData.title" required>
+                            </div>
+                        </div>                    
+                        <div class="form-group">
+                            <label for="content" class="col-sm-2 control-label">Contenu:</label>
+                            <div class="col-sm-10">
+                                <textarea name="content_{{item.id}}" ng-model="item.emailData.content" class="form-control" rows="12" required></textarea>
+                            </div>
+                        </div>                            
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-4">
+                                <button type="submit" class="btn btn-primary" ng-disabled="!wpForm.$valid"><i class="fa fa-paper-plane"></i> Envoyer</button>
+                            </div>
+                            <div class="col-sm-6"><span class="text-info">{{item.emailData.content.split(' ').length}}</span> mot(s)</div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>

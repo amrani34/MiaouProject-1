@@ -15,7 +15,21 @@
 
 (function () {
     'use strict';
-	var app = angular.module('miaouControllers', []);
+	var app = angular.module('miaouControllers', []),
+        defaultSearchParam = {
+            keywords: '',
+            searchType: 'exact',
+            strict: 1,
+            maxResults: 2,
+            minLength: 0
+        },
+        searchEngines = ['google', 'bing'],
+        validUrl = /^(https?:\/\/)/,
+        strToArray = function (str, sep) {
+            return str.split(sep).map(function (text) {
+                return text.trim();
+            });
+        };
 
 	app.controller('MailFormController', ['$scope', '$http', '$log', function ($scope, $http, $log) {
         $scope.sendMail = function () {            
@@ -53,27 +67,92 @@
         
     }]);
     
+	app.controller('MultiSearchController', ['$scope', '$http', function ($scope, $http) {
+        $scope.searchParams = defaultSearchParam;
+        $scope.waiting = false;
+        $scope.progress = 0;
+        $scope.nbRequests = 0;
+        $scope.nbResponses = 0;
+        $scope.keywordsList = [];
+        
+        // Functions
+        $scope.fetchKeywords = function () {
+            $scope.waiting = true;
+            
+            strToArray($scope.searchParams.keywords, /\n/).forEach(function(keywords, index) {
+                var item = {
+                    id: index,
+                    keywords : strToArray(keywords, ' '),
+                    linkList: [],
+                    resultsIn: [],
+                    resultsOut: [],
+                    emailData: {
+                        title: keywords,
+                        content: ''
+                    }
+                };
+                
+                searchEngines.forEach(function (searchEngine) {
+					
+					$http.post('/links/find', {
+                        searchType: $scope.searchParams.searchType,
+						keywords: item.keywords,
+                        engine: searchEngine
+					}).success(function (response) {
+						response.urls.forEach(function (url) {
+							if (!validUrl.test(url) || item.linkList.indexOf(url) !== -1)
+								return false;
+							$scope.nbRequests++;
+
+							item.linkList.push(url);
+                            
+							$http.post('/keywords/find', {
+								url: url,
+								strict: $scope.searchParams.strict,
+								keywords: item.keywords,
+								maxResults: $scope.searchParams.maxResults
+							}).success(function (response) {
+								$scope.nbResponses++;
+								
+                                $scope.progress = parseInt($scope.nbResponses / $scope.nbRequests * 100, 10);
+								if ($scope.nbResponses === $scope.nbRequests)
+									$scope.waiting = false;
+								
+								if (!response.success)
+									return;
+								                                
+								response.in.forEach(function (text) {
+									if (item.resultsIn.indexOf(text) !== -1)
+										return false;
+									item.resultsIn.push(text);
+                                    item.emailData.content += text.trim();
+								});
+                                
+                                response.out.forEach(function (text) {
+									if (item.resultsOut.indexOf(text) !== -1)
+										return false;
+									item.resultsOut.push({text: text, origin: url});
+								});
+							}).error(function () {
+								$scope.nbResponses++;
+                                $scope.progress = parseInt($scope.nbResponses / $scope.nbRequests * 100, 10);
+								if ($scope.nbResponses === $scope.nbRequests)
+									$scope.waiting = false;
+							});
+						});
+					}).error(function () {
+						$scope.waiting = false;
+					});
+				});
+                $scope.keywordsList.push(item);
+            });            
+        };
+    }]);
+    
 	app.controller('KeywordsController', ['$scope', '$http', function ($scope, $http) {
 			/*************************
 			 * Variables definition  *
 			 ************************/
-			var searchEngines = ['google', 'bing'],
-					validUrl = /^(https?:\/\/)/,
-					strToArray = function (str, sep) {
-						return str.split(sep).map(function (text) {
-							return text.trim();
-						});
-					},
-					removeTextFromResults = function (text) {
-						var index = $scope.keywordsList.indexOf(text);
-
-						if (index === -1)
-							return false;
-
-						$scope.keywordsList.splice(index, 1);
-						return true;
-					};
-
 			$scope.linkList = [];
 			$scope.keywordsList = [];
 			$scope.resultsIn = [];
@@ -99,13 +178,7 @@
 			}
             
 			$scope.waiting = false;
-			$scope.searchParams = {
-				keywords: '',
-				searchType: 'exact',
-				strict: 1,
-				maxResults: 2,
-				minLength: 0
-			};
+			$scope.searchParams = defaultSearchParam;
 
 			$scope.fetchKeywords = function () {
 				$scope.waiting = true;
