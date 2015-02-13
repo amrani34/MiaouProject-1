@@ -61,8 +61,8 @@
     <div class="progress animate-show" ng-show="waiting">
         <div class="progress-bar" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progress}}%;"></div>
     </div>
-    <section id="multisearch-results" ng-repeat="item in keywordsList">
-        <div class="panel panel-default animate-show" ng-controller="MailFormController">
+    <section id="multisearch-results">
+        <div class="panel panel-default animate-show" ng-repeat="item in keywordsList">
             <div class="panel-heading">
                 <h3 class="panel-title">Créer un article | {{item.keywords.join(' ')}} - <span class="text-success">{{item.resultsIn.length}} résultat(s)</span></h3>
             </div>

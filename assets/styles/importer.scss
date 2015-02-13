@@ -29,9 +29,12 @@ main {
 .wrapper {
     background-color: #fff;
     padding: 20px 20px 0;
-    margin-top: 20px;
 }
 
+#multisearch-results {
+  
+    margin-top: 20px;
+}
 #footer {
     position: fixed;
     bottom: 0;
