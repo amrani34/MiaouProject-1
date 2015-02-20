@@ -5,16 +5,27 @@
                 <legend>Recherche multiple</legend>
                 <div class="form-group">
                     <label for="keywords" class="col-sm-2 control-label">Mots-clés:</label>
-                    <div class="col-sm-6">
+                    <div class="col-sm-5">
                         <textarea ng-model="searchParams.keywords" rows="8" type="text" class="form-control" id="keywords" name="keywords" placeholder="Miaou Le chat" required></textarea>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-5">
                         <label class="radio-inline">
                             <input ng-model="searchParams.searchType" type="radio" id="search_large" name="search_type" value="large"> Recherge large <br /> <small class="text-muted">ex: Mes <i>mots-clés</i></small>
                         </label>
                         <label class="radio-inline">
                             <input ng-model="searchParams.searchType" type="radio" id="search_exact" name="search_type" value="exact"> Recherche exacte <br /> <small class="text-muted">ex: <i>"Mes mots-clés"</i></small>
                         </label>
+                    </div>
+                    <div class="col-sm-5">
+						<hr class="hidden-xs" />
+						<div class="form-group">
+							<label class="col-sm-4 col-md-2 control-label"><%= __('Site') %></label>
+							<div class="col-sm-8 col-md-10">								
+								<select name="site" ng-model="searchParams.site" class="form-control" required>
+									<option ng-repeat="site in sitesList" value="{{site.id}}">{{site.name}}</option>
+								</select>
+							</div>
+						</div>
                     </div>
                 </div>                            
                 <div class="form-group">

@@ -1,0 +1,131 @@
+<section class="container" ng-controller="ConfigController">
+	<div id="alerts-pane" ng-repeat="alert in alerts">		
+		<div class="alert alert-{{ alert.type }} alert-dismissable" role="alert">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true" ng-click="">&times;</span></button>
+			{{ alert.message }}
+		</div>
+	</div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-envelope"></i> <%= __('Configure mail adresses') %></h3>
+        </div>
+		<table class="table">
+			<thead>
+				<tr>
+					<th><%= __('Address') %></th>
+					<th><%= __('Attached websites') %></th>
+					<th class="text-right"><%= __('Actions') %></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="mail in models.mail.list">
+					<td>{{mail.user}}</td>
+					<td><span class="badge">{{mail.sites.length}}</span></td>
+					<td class="text-right">
+						<div class="btn-group" role="group" aria-label="actions">
+							<button type="button" class="btn btn-default" ng-click="edit('mail', mail)"><i class="fa fa-pencil-square-o"></i></button>
+							<button type="button" class="btn btn-danger" ng-click="delete(mail)"><i class="fa fa-trash"></i></button>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+        <div class="panel-body">
+            <form class="form-horizontal" name="mailForm" ng-submit="mailForm.$valid  && save(models.mail.current)">
+                <div class="form-group">
+                    <label for="user" class="col-sm-2 control-label"><%= __('Email') %></label>
+                    <div class="col-sm-10">
+                        <input type="email" ng-model="models.mail.current.user" class="form-control" id="user" name="user" placeholder="j.doe@mail.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="col-sm-2 control-label"><%= __('Password') %></label>
+                    <div class="col-sm-10">
+                        <input type="password" ng-model="models.mail.current.password" class="form-control" id="password" name="password" placeholder="123456" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="host" class="col-sm-2 control-label"><%= __('Host') %></label>
+                    <div class="col-sm-10">
+                        <input type="text" ng-model="models.mail.current.host" class="form-control" id="host" name="host" placeholder="smtp.test.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="models.mail.current.ssl" name="ssl"> <%= __('Use SSL') %>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-default"><%= __('Validate') %></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-globe"></i> <%= __('Configure websites') %></h3>
+        </div>
+        <table class="table">
+			<thead>
+				<tr>
+					<th colspan="3">
+						<%= __('My websites') %>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="site in models.site.list">
+					<td>{{site.name}}</td>
+					<td><a href="{{site.url}}" target="_blank">{{site.url}}</a></td>
+					<td class="text-right">
+						<div class="btn-group" role="group" aria-label="actions">
+							<button type="button" class="btn btn-default" ng-click="edit('site', site)"><i class="fa fa-pencil-square-o"></i></button>
+							<button type="button" class="btn btn-danger" ng-click="delete(site)"><i class="fa fa-trash"></i></button>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+        <div class="panel-body">
+            <form class="form-horizontal" name="siteForm" ng-submit="siteForm.$valid  && save(models.site.current)">
+                <div class="form-group">
+                    <label for="user" class="col-sm-2 control-label"><%= __('Name') %></label>
+                    <div class="col-sm-10">
+                        <input type="text" ng-model="models.site.current.name" class="form-control" id="name" name="name" placeholder="j-doe.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="url" class="col-sm-2 control-label"><%= __('Url') %></label>
+                    <div class="col-sm-10">
+                        <input type="url" ng-model="models.site.current.url" class="form-control" id="url" name="url" placeholder="http://j-doe.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="mailTo" class="col-sm-2 control-label"><%= __('Mail to:') %></label>
+                    <div class="col-sm-10">
+                        <input type="email" ng-model="models.site.current.mailTo" class="form-control" id="mailTo" name="mailTo" placeholder="j.doe@mail.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="mailFrom" class="col-sm-2 control-label"><%= __('Mail from:') %></label>
+                    <div class="col-sm-10">
+						<select ng-model="models.site.current.mailFrom" name="mailFrom" ng-repeat="mail in models.mail.list" required>
+							<option value="{{mail.id}}">{{mail.user}}</option>
+						</select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-default"><%= __('Validate') %></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

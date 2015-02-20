@@ -47,5 +47,9 @@ module.exports.routes = {
   ***************************************************************************/
     '/multisearch': {
         view: 'multisearch'
+    },
+    
+    '/configure': {
+        view: 'config'
     }
 };

@@ -13,38 +13,40 @@ module.exports = {
      */
 
     send: function (request, response) {
-        var mailTitle,
-            mailContent,
-            emailjs,
+        var emailjs,
             mailServer,
-            emailAddress,
-            emailPasswd;
+            requiredFields;
         
-        emailAddress = 'La bonne adresse';
-        emailPasswd = 'La bonne adresse';
+        requiredFields = {
+            title: 'string',
+            content : 'string',
+            site: 'string'
+        };
+        
+        for (var prop in requiredFields)
+            if (!request.body.hasOwnProperty(prop) || (typeOf(request.body[prop]) !== requiredFields[prop])) return response.badRequest('Missing parameter ' + prop);
+        
+        Site.findOne({id: request.body.site}).exec(function(err, site){
+            if (err) return response.serverError(err);
+            sails.log.info(site);
+            emailjs = require("emailjs");
+            
+            // If no website assoicated
+            if (!site.hasOwnProperty('mail')) return response.notFound(request.__('No mail associated with this website, please update configuration'));
+            
+            mailServer = emailjs.server.connect(site.mail);
 
-        mailTitle = request.body.title;
-        mailContent = request.body.content;
-        if (!mailTitle || !mailContent)
-            return response.badRequest({error: true, message: 'Missing parameters'});
-        emailjs = require("emailjs");
-        mailServer = emailjs.server.connect({
-            user: emailAddress,
-            password: emailPasswd,
-            host: "host",
-            ssl: true
-        });
-
-        //send Mail
-        mailServer.send({
-            text: mailContent,
-            from: emailAddress,
-            to: "bonne adresse",
-            subject: mailTitle
-        }, function (err, message) {
-            if (err)
-                return response.serverError(err);
-            response.send({send: true, message: message});
+            //send Mail
+            mailServer.send({
+                text: request.body.content,
+                from: site.mail.user,
+                to: site.mailTo,
+                subject: mailTitle
+            }, function (err, message) {
+                if (err)
+                    return response.serverError(err);
+                response.send({send: true, message: message});
+            });            
         });
     }
 };

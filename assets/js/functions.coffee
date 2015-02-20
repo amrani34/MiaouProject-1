@@ -7,3 +7,6 @@ searchText = (text, array) ->
         if obj.text is text
             found = true
     found
+
+isLoadedObject = (obj) ->
+	(typeof obj is 'object') && obj.hasOwnProperty('id')

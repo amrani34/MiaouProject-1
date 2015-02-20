@@ -21,7 +21,8 @@
             searchType: 'exact',
             strict: 1,
             maxResults: 2,
-            minLength: 0
+            minLength: 0,
+            site: null
         },
         searchEngines = ['google', 'bing'],
         validUrl = /^(https?:\/\/)/,
@@ -31,6 +32,59 @@
             });
         };
 
+	app.controller('ConfigController', ['$scope', '$http', 'Mail', 'Site', 'BootStrapAlert', function ($scope, $http, Mail, Site, BootStrapAlert) {            
+            $scope.models = {
+                mail: {
+                    factory: Mail,
+                    current: new Mail(),
+                    list: Mail.query()
+                },
+                site: {
+                    factory: Site,
+                    current: new Site(),
+                    list: Site.query()
+                }
+            };
+            
+            /**
+             * Update an email params
+             * @param Mail mail
+             * @returns void
+             */
+            $scope.edit = function (modelName, model) {
+                if (!$scope.models.hasOwnProperty(modelName)) return false;
+                $scope.models[modelName].current = model;
+            };
+
+            $scope.delete = function (model) {
+                if (!confirm('Delete ?')) return false;
+                model.$delete({id: model.id});
+            };
+
+            $scope.save = function (model) {
+                var options = isLoadedObject(model) ? {id: model.id}: undefined,
+                    saveAlert = BootStrapAlert.add('info', 'Please wait');
+                model.$save(options, function() {
+                    saveAlert.type = 'success';
+                    saveAlert.message = 'Configuration updated';
+                }, function (err) {
+                    saveAlert.type = 'danger';
+                    saveAlert.message = err.statusText;
+                });
+            };
+            
+            function getList(model) {
+                if (!$scope.models.hasOwnProperty(model)) return false;
+                
+                $http.get('/'+ model).success(function (response) {                    
+                    $scope.models[model].list = response;
+                }).error(function (err) {
+                    BootStrapAlert.add('danger', err.statusText)
+                    console.error(err);
+                });
+            };
+        }]);
+    
 	app.controller('MailFormController', ['$scope', '$http', '$log', function ($scope, $http, $log) {
         $scope.sendMail = function () {            
             $scope.alertClass = 'alert-info';
@@ -67,13 +121,14 @@
         
     }]);
     
-	app.controller('MultiSearchController', ['$scope', '$http', function ($scope, $http) {
+	app.controller('MultiSearchController', ['$scope', '$http', 'Site', function ($scope, $http, Site) {
         $scope.searchParams = defaultSearchParam;
         $scope.waiting = false;
         $scope.progress = 0;
         $scope.nbRequests = 0;
         $scope.nbResponses = 0;
         $scope.keywordsList = [];
+        $scope.sitesList = Site.query();
         
         // Functions
         $scope.fetchKeywords = function () {
@@ -89,7 +144,8 @@
                     emailData: {
                         title: keywords,
                         content: ''
-                    }
+                    },
+                    site: $scope.searchParams.site
                 };
                 
                 searchEngines.forEach(function (searchEngine) {
