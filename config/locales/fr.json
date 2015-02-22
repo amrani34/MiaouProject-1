@@ -4,5 +4,7 @@
     "Configure mail adresses": "Configurer les courriels",
     "Password": "Mot de passe",
     "Configure websites": "Configurer les sites",
-	"No mail associated with this website, please update configuration": "Aucun email associé à ce site, veuillez mettre à jour la configuration"
+	"No mail associated with this website, please update configuration": "Aucun email associé à ce site, veuillez mettre à jour la configuration",
+	"Save": "Enregistrer",
+	"Send": "Envoyer"
 }

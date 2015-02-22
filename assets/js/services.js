@@ -1,7 +1,7 @@
 (function () {
     'use strict';
     var app = angular.module('miaouServices', ['ngResource']),
-        models = ['Site', 'Mail'];
+        models = ['Site', 'Mail', 'Result'];
         
     // Models
     models.forEach(function (model) {
@@ -27,4 +27,25 @@
                 }
             };
         }]);
+    
+    // Mails
+    app.factory('MailService',['$http', function ($http) {
+        var requiredFields = ['title', 'content', 'site'],
+        promise;
+        
+        return {
+            send: function (data, successCallback, errorCallback) {
+                for (var i = 0, l = requiredFields.length; i < l; i++)
+                    if (!data.hasOwnProperty(requiredFields[i]))
+                        return false;
+                promise = $http.post('/mail/send', data);
+                
+                // Callbacks
+                if (typeof successCallback === "function")
+                    promise.success(successCallback);
+                if (typeof errorCallback === "function")
+                    promise.error(errorCallback);
+            }
+        }
+    }]);
 })();

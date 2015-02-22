@@ -39,6 +39,14 @@
           </div>
       </header>
       <main>
+		  <div class="container">
+			  <div id="alerts-pane" ng-repeat="alert in alerts">		
+				  <div class="alert alert-{{ alert.type }} alert-dismissable" role="alert">
+					  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true" ng-click="">&times;</span></button>
+					  {{ alert.message }}
+				  </div>
+			  </div>
+		  </div>
           <%- body %>
           <!--TEMPLATES-->
           

@@ -121,7 +121,7 @@
         
     }]);
     
-	app.controller('MultiSearchController', ['$scope', '$http', 'Site', function ($scope, $http, Site) {
+	app.controller('MultiSearchController', ['$scope', '$http', 'Site', 'Result', 'BootStrapAlert', 'MailService', function ($scope, $http, Site, Result, BootStrapAlert, MailService) {
         $scope.searchParams = defaultSearchParam;
         $scope.waiting = false;
         $scope.progress = 0;
@@ -131,12 +131,43 @@
         $scope.sitesList = Site.query();
         
         // Functions
+        $scope.save = function (obj) {
+            var result = new Result(obj),
+                saveAlert = BootStrapAlert.add('info', 'Please wait');
+            result.$save(function() {
+                saveAlert.type = 'success';
+                saveAlert.message = 'Recherche sauvegardée';
+            }, function (err) {
+                saveAlert.type = 'danger';
+                saveAlert.message = err.statusText;
+            });
+        };
+        
+        $scope.sendMail = function (obj) {
+            if (!obj.hasOwnProperty('emailData'))
+                return BootStrapAlert.add('danger', 'Invalid request');
+            if (!obj.hasOwnProperty('site'))
+                return BootStrapAlert.add('danger', 'Please select a website');
+            
+            var postData = obj.emailData,
+                mailAlert = BootStrapAlert.add('info', 'Please wait');
+            postData.site = obj.site;
+            
+            MailService.send(postData, function (response) {
+                mailAlert.type = 'success';
+                mailAlert.message = 'Mail envoyé';
+            }, function (err) {
+                $log.error(err);
+                mailAlert.type = 'danger';
+                mailAlert.message = 'Échec de l\'envoi';
+            });            
+        };
+        
         $scope.fetchKeywords = function () {
             $scope.waiting = true;
             
             strToArray($scope.searchParams.keywords, /\n/).forEach(function(keywords, index) {
                 var item = {
-                    id: index,
                     keywords : strToArray(keywords, ' '),
                     linkList: [],
                     resultsIn: [],

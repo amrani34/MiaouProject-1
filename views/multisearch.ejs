@@ -77,9 +77,8 @@
             <div class="panel-heading">
                 <h3 class="panel-title">Créer un article | {{item.keywords.join(' ')}} - <span class="text-success">{{item.resultsIn.length}} résultat(s)</span></h3>
             </div>
-            <div class="panel-body">
-                <div class="alert animate-show {{alertClass}}" role="alert" ng-show="showAlert">{{alertMessage}}</div>                
-                <form id="wpForm" name="wpForm" class="form-horizontal animate-show" ng-submit="wpForm.$valid && sendMail(item.emailData)">
+            <div class="panel-body">                                
+                <form id="wpForm" name="wpForm" class="form-horizontal animate-show" ng-submit="wpForm.$valid && sendMail(item)">
                     <fieldset>
                         <div class="form-group">
                             <label for="title" class="col-sm-2 control-label">Titre:</label>
@@ -95,7 +94,8 @@
                         </div>                            
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-4">
-                                <button type="submit" class="btn btn-primary" ng-disabled="!wpForm.$valid"><i class="fa fa-paper-plane"></i> Envoyer</button>
+                                <button type="submit" class="btn btn-primary" ng-disabled="!wpForm.$valid"><i class="fa fa-paper-plane"></i> <%= __('Send') %></button>
+                                <button type="button" class="btn btn-default" ng-disabled="!wpForm.$valid" ng-click="save(item)"><span class="glyphicon glyphicon-save" aria-hidden="true"></span> <%= __('Save') %></button>
                             </div>
                             <div class="col-sm-6"><span class="text-info">{{item.emailData.content.split(' ').length}}</span> mot(s)</div>
                         </div>

@@ -18,6 +18,10 @@ module.exports = {
         mailTo: {
             type: 'email',
             required: true
+        },
+        results: {
+            collection: 'result',
+            via: 'site'
         }
     }
 };

@@ -24,24 +24,24 @@ module.exports = {
         };
         
         for (var prop in requiredFields)
-            if (!request.body.hasOwnProperty(prop) || (typeOf(request.body[prop]) !== requiredFields[prop])) return response.badRequest('Missing parameter ' + prop);
+            if (!request.body.hasOwnProperty(prop) || (typeof request.body[prop] !== requiredFields[prop])) return response.badRequest('Missing parameter ' + prop);
         
-        Site.findOne({id: request.body.site}).exec(function(err, site){
+        Site.findOne({id: request.body.site}).populate('mailFrom').exec(function(err, site){
             if (err) return response.serverError(err);
             sails.log.info(site);
             emailjs = require("emailjs");
             
             // If no website assoicated
-            if (!site.hasOwnProperty('mail')) return response.notFound(request.__('No mail associated with this website, please update configuration'));
+            if (!site.hasOwnProperty('mailFrom')) return response.notFound(request.__('No mail associated with this website, please update configuration'));
             
-            mailServer = emailjs.server.connect(site.mail);
+            mailServer = emailjs.server.connect(site.mailFrom);
 
             //send Mail
             mailServer.send({
                 text: request.body.content,
-                from: site.mail.user,
+                from: site.mailFrom.user,
                 to: site.mailTo,
-                subject: mailTitle
+                subject: request.body.title
             }, function (err, message) {
                 if (err)
                     return response.serverError(err);
