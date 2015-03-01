@@ -1,0 +1,28 @@
+<div class="result-infos">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#results-in" aria-controls="results-in" role="tab" data-toggle="tab"><i class="fa fa-search"></i> Résultats inclus</a></li>
+        <li role="presentation"><a href="#results-out" aria-controls="results-out" role="tab" data-toggle="tab"><i class="fa fa-times"></i> Résultats exclus</a></li>
+        <li role="presentation"><a href="#links" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-link"></i> Liens</a></li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="results-in">
+            <ul ng-repeat="text in result.resultsIn">
+                <li>{{text}}</li>
+            </ul>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="results-out">
+            <ul ng-repeat="text in result.resultsOut">
+                <li>{{text}}</li>
+            </ul>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="links">
+            <ul class="list-unstyled" ng-repeat="link in result.linkList">
+                <li>
+                    <a ng-href="{{link}}" class="label label-default" target="_blank">{{link}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -109,8 +109,8 @@
                 <div class="form-group">
                     <label for="mailFrom" class="col-sm-2 control-label"><%= __('Mail from:') %></label>
                     <div class="col-sm-10">
-						<select ng-model="models.site.current.mailFrom" name="mailFrom" ng-repeat="mail in models.mail.list" required>
-							<option value="{{mail.id}}">{{mail.user}}</option>
+						<select ng-model="models.site.current.mailFrom" name="mailFrom" required>
+							<option value="{{mail.id}}" ng-repeat="mail in models.mail.list">{{mail.user}}</option>
 						</select>
                     </div>
                 </div>

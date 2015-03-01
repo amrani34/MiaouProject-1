@@ -15,5 +15,5 @@
 
 (function () {
     'use strict';
-	var app = angular.module('miaou', ['miaouAnimate', 'miaouControllers', 'miaouServices']);
+	var app = angular.module('miaou', ['miaouAnimate', 'miaouControllers', 'miaouServices', 'ngRoute']);
 })();

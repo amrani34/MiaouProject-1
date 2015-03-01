@@ -10,3 +10,9 @@ searchText = (text, array) ->
 
 isLoadedObject = (obj) ->
 	(typeof obj is 'object') && obj.hasOwnProperty('id')
+
+addTestKeywords = ->
+    text = ''
+    for keywords in ['iPhone 6', 'Samsung Galaxy S5', 'Chromecast', 'Nexus 6', 'Galaxy Note 4', 'Outlook 365', 'Nexus 5', 'Samsung Alpha', 'iPhone 6 Plus']
+        text += keywords + '\n'
+    $('#keywords').val(text)

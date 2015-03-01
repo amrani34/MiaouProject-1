@@ -2,6 +2,9 @@
 @import "variables";
 @import "bootswatch-paper";
 
+@include font-face("Slabo 13px", font-files('Slabo13px-Regular-webfont.eot', 'Slabo13px-Regular-webfont.woff2', 'Slabo13px-Regular-webfont.woff', 'Slabo13px-Regular-webfont.ttf', 'Slabo13px-Regular-webfont.svg'));
+ 
+
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
     font-family: $font-family-serif;
     font-weight: 400;

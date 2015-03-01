@@ -1,0 +1,25 @@
+<div class="row">
+    <div class="col-sm-3" ng-repeat="res in results">
+        <div id="result{{$index}}" class="panel panel-default" >
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ res.keywords.join(' ') }}</h3>
+            </div>
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt>Nombre de liens :</dt>
+                    <dd>{{ res.linkList.length }}</dd>
+                    <dt>Résultats inclus :</dt>
+                    <dd>{{ res.resultsIn.length }}</dd>
+                    <dt>Résultats exclus:</dt>
+                    <dd>{{ res.resultsOut.length }}</dd>
+                </dl>
+            </div>
+            <div class="panel-footer">
+                <div class="btn-group">
+                    <a ng-href="#/result/{{res.id}}" class="btn btn-default"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Afficher</a>
+                    <button class="btn btn-danger" ng-click="deleteResult(res)"><i class="fa fa-trash-o"></i> Supprimer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

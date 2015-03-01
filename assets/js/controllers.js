@@ -209,14 +209,14 @@
 									return;
 								                                
 								response.in.forEach(function (text) {
-									if (item.resultsIn.indexOf(text) !== -1)
+									if (searchText(text, item.resultsIn))
 										return false;
-									item.resultsIn.push(text);
-                                    item.emailData.content += text.trim();
+									item.resultsIn.push({text: text, origin: url});
+                                    item.emailData.content += text.trim() + '.\n';
 								});
                                 
                                 response.out.forEach(function (text) {
-									if (item.resultsOut.indexOf(text) !== -1)
+									if (searchText(text, item.resultsOut))
 										return false;
 									item.resultsOut.push({text: text, origin: url});
 								});
