@@ -111,30 +111,5 @@ MultiSearchController = ($scope, $http, Site, Result, BootStrapAlert, MailServic
         .error -> $scope.waiting = false
       $scope.keywordsList.push item
       console.log "Recherche lancée sur le mot clé #{keywords}"
-#         .forEach(function (text) {
-#           if ()
-#             return false;
-#           ({});
-#                            ;
-#         });
-#
-#                         response.out.forEach(function (text) {
-#           if (searchText(text, item.resultsOut))
-#             return false;
-#           item.resultsOut.push({text: text, origin: url});
-#         });
-#       })(function () {
-#         $scope.nbResponses++;
-#                         $scope.progress = parseInt($scope.nbResponses / $scope.nbRequests * 100, 10);
-#         if ($scope.nbResponses === $scope.nbRequests)
-#           $scope.waiting = false;
-#       });
-#     });
-#   }).error(function () {
-#     $scope.waiting = false;
-#   });
-# });
-#         $scope.keywordsList.push(item);
-#     });
-# };
+
 angular.module('miaou').controller 'MultiSearchController', ['$scope', '$http', 'Site', 'Result', 'BootStrapAlert', 'MailService', MultiSearchController]
