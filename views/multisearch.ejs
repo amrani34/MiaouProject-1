@@ -20,14 +20,14 @@
 						<hr class="hidden-xs" />
 						<div class="form-group">
 							<label class="col-sm-4 col-md-2 control-label"><%= __('Site') %></label>
-							<div class="col-sm-8 col-md-10">								
+							<div class="col-sm-8 col-md-10">
 								<select name="site" ng-model="searchParams.site" class="form-control" required>
 									<option ng-repeat="site in sitesList" value="{{site.id}}">{{site.name}}</option>
 								</select>
 							</div>
 						</div>
                     </div>
-                </div>                            
+                </div>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-5">
                         <div class="radio">
@@ -39,7 +39,7 @@
                         <div class="radio">
                             <label>
                                 <input ng-model="searchParams.strict" type="radio" name="strict" id="strictMode1" value="1">
-                                La phrase doit contenir <b>tous</b> les mot-clés 
+                                La phrase doit contenir <b>tous</b> les mot-clés
                             </label>
                         </div>
                     </div>
@@ -49,21 +49,21 @@
                             <div class="col-sm-3">
                                 <input ng-model="searchParams.maxResults" type="number" class="form-control" id="max_results" name="max_results" placeholder="Nombre de résultats par page" min="1">
                             </div>
-                        </div>                            
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-3">
+                    <div class="col-sm-5">
                         <button type="submit" class="btn btn-primary"><i ng-class="{'fa fa-search': !waiting, 'fa fa-spinner fa-spin': waiting}"></i> Rechercher</button>
+                        <button type="button" class="btn btn-primary" ng-click="sendAll()" ng-show="keywordsList.length"><i class="fa fa-paper-plane"></i> <%= __('Send All') %></button>
                         <button type="button" class="btn btn-default" ng-click="emptyLinks()"><i class="fa fa-trash"></i> Vider</button>
-                        
                     </div>
                     <div class="col-sm-7">
                         <p class="lead">
                             <span class="text-primary" id="nb-links">{{keywordsList.length}}</span> Mots clé(s), recherché(s) sur <span class="text-primary" id="nb-req">{{nbRequests}}</span> page(s) avec
                             <span class="text-primary" id="nb-rep">{{nbResponses}}</span> réponse(s)<br />
                             <span class="animate-show" ng-show="waiting"><i class="fa fa-spinner fa-spin"></i> Veuillez patienter</span>
-                        </p>									
+                        </p>
                     </div>
                 </div>
             </fieldset>
@@ -77,7 +77,7 @@
             <div class="panel-heading">
                 <h3 class="panel-title">Créer un article | {{item.keywords.join(' ')}} - <span class="text-success">{{item.resultsIn.length}} résultat(s)</span></h3>
             </div>
-            <div class="panel-body">                                
+            <div class="panel-body">
                 <form id="wpForm" name="wpForm" class="form-horizontal animate-show" ng-submit="wpForm.$valid && sendMail(item)">
                     <fieldset>
                         <div class="form-group">
@@ -85,13 +85,13 @@
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="title_{{item.id}}" name="title_{{item.id}}" placeholder="Mon titre d'une éloquence rare" ng-model="item.emailData.title" required>
                             </div>
-                        </div>                    
+                        </div>
                         <div class="form-group">
                             <label for="content" class="col-sm-2 control-label">Contenu:</label>
                             <div class="col-sm-10">
                                 <textarea name="content_{{item.id}}" ng-model="item.emailData.content" class="form-control" rows="12" required></textarea>
                             </div>
-                        </div>                            
+                        </div>
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-4">
                                 <button type="submit" class="btn btn-primary" ng-disabled="!wpForm.$valid"><i class="fa fa-paper-plane"></i> <%= __('Send') %></button>
