@@ -35,6 +35,7 @@ module.exports = {
                 return new RegExp(keyword, 'i');
             }),
             validUrl = /^(https?:\/\/)/,
+            invalidEncoding = /charset=iso-8859-1/i,
             nbComplete = 0,
             strictMode = request.body.strict || false,
             toAvoid = ['<!--', '-->', 'function', ' > ', ' < ', '_', ' var ', ']]>', '»', '|', '/*', '//', '{', 'url', 'En savoir plus', 'false', '/', 'url', 'false', '%20'],
@@ -50,6 +51,12 @@ module.exports = {
         if (validUrl.test(url)) {
             protocol = (url.slice(0, 5) === 'https') ? https : http;
             protocol.request(url, function (res) {
+                if (res.headers.hasOwnProperty('content-type')) {
+                  var encoding = res.headers['content-type'];
+                  if (encoding.match(invalidEncoding)) {
+                    return response.serverError({error: true, message: 'Invalid encoding'});
+                  }
+                }
                 if (res.statusCode !== 200)
                 {
                     sails.log.warn('Url ' + url + ' return code ' + res.statusCode);
@@ -64,8 +71,15 @@ module.exports = {
                     return response.serverError(errors);
                 }).on('end', function() {
                     $ = cheerio.load(html, {normalizeWhitespace: true});
-                    data = $('body').text().split(/[!().;?\r\n]/);
 
+                    // Remove scripts
+                    $('script').remove();
+                    var headContent = $('head').html();
+                    if (headContent !== null && headContent.match(invalidEncoding)) {
+                      return response.badRequest({error: true, message: 'Invalid encoding'});
+                    }
+                    var $body = $('body');
+                    data = $body.text().split(/[!().;?\r\n]/);
                     data.forEach(function (text) {
                         // Check if string match valid condition
                         if (text.length < minLength || text.length > maxLentgh || results.in.length >= resultLimit)
@@ -91,7 +105,7 @@ module.exports = {
                         }
 
                         if (valid)
-                            results.in.push(text);
+                            results.in.push(text.trim());
                         else
                             results.out.push(text);
                     });
