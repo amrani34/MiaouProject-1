@@ -54,13 +54,13 @@ module.exports = {
                 if (res.headers.hasOwnProperty('content-type')) {
                   var encoding = res.headers['content-type'];
                   if (encoding.match(invalidEncoding)) {
-                    return response.serverError({error: true, message: 'Invalid encoding'});
+                    return response.badRequest({error: true, message: 'Invalid encoding'});
                   }
                 }
                 if (res.statusCode !== 200)
                 {
                     sails.log.warn('Url ' + url + ' return code ' + res.statusCode);
-                    return response.serverError({error: true, message: 'Code != 200'});
+                    return response.badRequest({error: true, message: 'Code != 200'});
                 }
 
                 res.setEncoding('utf8');
