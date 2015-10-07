@@ -32,7 +32,7 @@ module.exports = {
         },
             url = request.body.url.trim(),
             keywords = request.body.keywords.map(function (keyword) {
-                return new RegExp(keyword, 'i');
+                return new RegExp('\\b' + keyword + '\\b', 'igm');
             }),
             validUrl = /^(https?:\/\/)/,
             invalidEncoding = /charset=iso-8859-1/i,
