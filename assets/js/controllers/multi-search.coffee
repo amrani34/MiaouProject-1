@@ -71,7 +71,7 @@ MultiSearchController = ($scope, $http, Site, Result, BootStrapAlert, MailServic
         resultsIn: []
         resultsOut: []
         emailData:
-          title: keywords
+          title: keywords.capitalize()
           content: ''
         site: $scope.searchParams.site
 
@@ -99,6 +99,8 @@ MultiSearchController = ($scope, $http, Site, Result, BootStrapAlert, MailServic
                   text: text
                   origin: url
                 item.emailData.content += text.trim() + '.\n'
+                num = parseInt Math.random() * 10, 10
+                item.emailData.content += '\n' if num > 6
               for text in response.out
                 continue if searchText text, item.resultsOut
                 item.resultsOut.push
