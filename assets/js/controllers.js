@@ -50,7 +50,7 @@
         };
 
         $scope.startEdit = function (title, data) {
-            $scope.article.title = title;
+            $scope.article.title = title.capitalize();
             $scope.article.content = data.map(function(obj){
                 var text = obj.text.trim();
                 $scope.wordCount += text.split(' ').length;
