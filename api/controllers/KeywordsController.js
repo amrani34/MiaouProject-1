@@ -37,7 +37,7 @@ module.exports = {
             validUrl = /^(https?:\/\/)/,
             invalidEncoding = /charset=iso-8859-1/i,
             nbComplete = 0,
-            strictMode = request.body.strict || false,
+            strictMode = !!parseInt(request.body.strict, 10),
             toAvoid = ['<!--', '-->', 'function', ' > ', ' < ', '_', ' var ', ']]>', '»', '|', '/*', '//', '{', 'url', 'En savoir plus', 'false', '/', 'url', 'false', '%20'],
             minLength = 62 - keywords.length,
             maxLentgh = 150,
