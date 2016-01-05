@@ -9,10 +9,10 @@
         <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
         <link rel="stylesheet" href="/styles/importer.css">
         <!--STYLES END-->
-        
+
         <!-- External Stylesheets -->
         <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-        
+
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -33,13 +33,14 @@
                       <li role="presentation"><a href="/"><%= __('Single search') %></a></li>
                       <li role="presentation"><a href="/multisearch"><%= __('Multi search') %></a></li>
                       <li role="presentation"><a href="/configure"><%= __('Configuration') %></a></li>
+                      <li role="presentation"><a href="/saved"><%= __('saved.result') %></a></li>
                   </ul>
               </div>
           </div>
       </header>
       <main>
 		  <div class="container">
-			  <div id="alerts-pane" ng-repeat="alert in alerts">		
+			  <div id="alerts-pane" ng-repeat="alert in alerts">
 				  <div class="alert alert-{{ alert.type }} alert-dismissable" role="alert">
 					  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true" ng-click="">&times;</span></button>
 					  {{ alert.message }}
@@ -56,13 +57,15 @@
               <p class="text-center">Copyright © MiaouCorp - 2014</p>
           </div>
       </footer>
-      
+
       <!--SCRIPTS-->
       <script src="/js/dependencies/sails.io.js"></script>
       <script src="/bower_components/angular/angular.js"></script>
       <script src="/bower_components/angular-animate/angular-animate.js"></script>
       <script src="/bower_components/angular-resource/angular-resource.js"></script>
       <script src="/bower_components/angular-route/angular-route.js"></script>
+      <script src="/bower_components/angular-bootstrap/ui-bootstrap.js"></script>
+      <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
       <script src="/bower_components/jquery/dist/jquery.js"></script>
       <script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
       <script src="/js/animation.js"></script>
